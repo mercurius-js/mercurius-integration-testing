@@ -1,11 +1,15 @@
 {
   "name": "fastify-gql-integration-testing",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "repository": "https://github.com/PabloSzx/fastify-gql-integration-testing",
   "license": "MIT",
   "author": "PabloSz <pablosaez1995@gmail.com>",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "prepublish": "tsc"
   },
