@@ -2,6 +2,16 @@
   "name": "fastify-gql-integration-testing",
   "version": "1.0.1",
   "private": false,
+  "keywords": [
+    "test",
+    "testing",
+    "integration",
+    "fastify",
+    "graphql",
+    "gql",
+    "fastify-gql",
+    "typescript"
+  ],
   "repository": "https://github.com/PabloSzx/fastify-gql-integration-testing",
   "license": "MIT",
   "author": "PabloSz <pablosaez1995@gmail.com>",
