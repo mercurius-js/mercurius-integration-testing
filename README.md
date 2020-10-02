@@ -1,15 +1,16 @@
-# fastify-gql-integration-testing
+# mercurius-integration-testing
 
-[![npm version](https://badge.fury.io/js/fastify-gql-integration-testing.svg)](https://badge.fury.io/js/fastify-gql-integration-testing)
+[![npm version](https://badge.fury.io/js/mercurius-integration-testing.svg)](https://badge.fury.io/js/mercurius-integration-testing)
 
 ```sh
-yarn add fastify-gql-integration-testing
+yarn add mercurius-integration-testing
 # or
-npm install fastify-gql-integration-testing
+npm install mercurius-integration-testing
 ```
 
 ## Features
 
+- **DocumentNode** and **string** support
 - **TypeScript** support
 - **query** | **mutation**.
 - **batchQueries**.
@@ -21,7 +22,7 @@ npm install fastify-gql-integration-testing
 ```ts
 // app.ts | app.js
 import Fastify from "fastify";
-import GQL from "fastify-gql";
+import GQL from "mercurius";
 import schema from "./schema";
 import { buildContext } from "./buildContext";
 
@@ -37,7 +38,7 @@ app.register(GQL, {
 ```ts
 // integration.test.js | integration.test.ts
 
-import { createFastifyGQLTestClient } from "fastify-gql-integration-testing";
+import { createFastifyGQLTestClient } from "mercurius-integration-testing";
 import { app } from "../app";
 
 // ...

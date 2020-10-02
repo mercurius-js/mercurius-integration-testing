@@ -1,4 +1,4 @@
-import "fastify-gql";
+import "mercurius";
 
 import { FastifyInstance } from "fastify";
 import { DocumentNode, GraphQLError, print } from "graphql";
@@ -33,7 +33,7 @@ type QueryFn = <
 
 export function createFastifyGQLTestClient(
   /**
-   * Fastify instance, in which it should have been already registered `fastify-gql`.
+   * Fastify instance, in which it should have been already registered `mercurius`.
    */
   app: FastifyInstance,
   /**
@@ -94,7 +94,7 @@ export function createFastifyGQLTestClient(
   /**
    * Send a batch of queries, make sure to enable `allowBatchedQueries`.
    *
-   * https://github.com/mcollina/fastify-gql#batched-queries
+   * https://github.com/mercurius-js/mercurius#batched-queries
    *
    *
    * @param queries Queries to be sent in batch.

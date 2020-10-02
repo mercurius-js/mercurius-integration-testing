@@ -1,5 +1,5 @@
 {
-  "name": "fastify-gql-integration-testing",
+  "name": "mercurius-integration-testing",
   "version": "1.0.2",
   "private": false,
   "keywords": [
@@ -9,10 +9,10 @@
     "fastify",
     "graphql",
     "gql",
-    "fastify-gql",
+    "mercurius",
     "typescript"
   ],
-  "repository": "https://github.com/PabloSzx/fastify-gql-integration-testing",
+  "repository": "https://github.com/PabloSzx/mercurius-integration-testing",
   "license": "MIT",
   "author": "PabloSz <pablosaez1995@gmail.com>",
   "main": "dist/index.js",
@@ -21,18 +21,20 @@
     "dist"
   ],
   "scripts": {
-    "prepublish": "tsc"
+    "prepare": "tsc"
   },
   "devDependencies": {
-    "@types/node": "^14.0.23",
-    "fastify": "^3.0.3",
-    "fastify-gql": "^5.0.1",
+    "@types/node": "^14.11.2",
+    "@types/ws": "^7.2.7",
+    "fastify": "^3.5.0",
     "graphql": "^15.3.0",
-    "typescript": "^3.9.7"
+    "typescript": "^4.0.3"
   },
   "peerDependencies": {
-    "fastify": "^3.0.3",
-    "fastify-gql": "^5.0.1",
+    "fastify": "^3.5.0",
     "graphql": "^15.3.0"
+  },
+  "dependencies": {
+    "mercurius": "^6.0.0"
   }
 }
