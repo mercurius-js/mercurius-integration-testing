@@ -31,7 +31,7 @@ type QueryFn = <
   queryOptions?: QueryOptions<TVariables>
 ) => Promise<GQLResponse<TData>>;
 
-export function createFastifyGQLTestClient(
+export function createMercuriusTestClient(
   /**
    * Fastify instance, in which it should have been already registered `mercurius`.
    */

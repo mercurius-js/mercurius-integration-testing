@@ -1,10 +1,10 @@
 import Fastify from "fastify";
 
-import { createFastifyGQLTestClient } from "./index";
+import { createMercuriusTestClient } from "./index";
 
 const app = Fastify();
 
-const testclient = createFastifyGQLTestClient(app);
+const testclient = createMercuriusTestClient(app);
 
 testclient.query("");
 

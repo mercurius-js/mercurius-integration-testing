@@ -38,12 +38,12 @@ app.register(GQL, {
 ```ts
 // integration.test.js | integration.test.ts
 
-import { createFastifyGQLTestClient } from "mercurius-integration-testing";
+import { createMercuriusTestClient } from "mercurius-integration-testing";
 import { app } from "../app";
 
 // ...
 
-const testClient = createFastifyGQLTestClient(app);
+const testClient = createMercuriusTestClient(app);
 
 expect(testClient.query("query { helloWorld }")).resolves.toEqual({
   data: {
