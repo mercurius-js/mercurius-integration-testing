@@ -21,6 +21,7 @@
     "dist"
   ],
   "scripts": {
+    "coverage": "tap --coverage --coverage-report=html && dotenv codecov",
     "prepare": "tsc",
     "test": "cross-env TS_NODE_PROJECT=./test/tsconfig.json tap --100"
   },
@@ -28,7 +29,9 @@
   "devDependencies": {
     "@types/node": "^14.11.8",
     "@types/tap": "^14.10.1",
+    "codecov": "^3.8.0",
     "cross-env": "^7.0.2",
+    "dotenv-cli": "^4.0.0",
     "fastify": "^3.5.1",
     "fastify-cookie": "^4.1.0",
     "graphql": "^15.3.0",

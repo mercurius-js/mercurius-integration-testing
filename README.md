@@ -1,6 +1,6 @@
 # mercurius-integration-testing
 
-[![npm version](https://badge.fury.io/js/mercurius-integration-testing.svg)](https://badge.fury.io/js/mercurius-integration-testing)
+[![npm version](https://badge.fury.io/js/mercurius-integration-testing.svg)](https://badge.fury.io/js/mercurius-integration-testing) [![codecov](https://codecov.io/gh/PabloSzx/mercurius-integration-testing/branch/master/graph/badge.svg)](https://codecov.io/gh/PabloSzx/mercurius-integration-testing)
 
 ```sh
 yarn add mercurius-integration-testing
