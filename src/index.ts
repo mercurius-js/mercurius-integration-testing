@@ -1,4 +1,4 @@
-import "mercurius";
+import type {} from "mercurius";
 
 import { FastifyInstance } from "fastify";
 import { DocumentNode, GraphQLError, print } from "graphql";
