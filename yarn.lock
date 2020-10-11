@@ -1164,10 +1164,10 @@ fastify-websocket@^2.0.5:
     find-my-way "^3.0.4"
     ws "^7.3.1"
 
-fastify@^3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/fastify/-/fastify-3.5.1.tgz#753a6909e3154d61fcde7402500ed92177132c1a"
-  integrity sha512-SO/ZZSbbAUrRxxz9zIsf1Ek5qqRux5EN03UF1lJGt/xwFzVpmW4h+p8kRCD08VCL1sItFy2dhFlR8FPaQfRGBw==
+fastify@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/fastify/-/fastify-3.6.0.tgz#b5fae09eccecb2be9e4ff24abc98cd7f0f0d10c3"
+  integrity sha512-nz35mhJpJNjSPZzw05x+ITXokeIMmG3MFPzzS/yNzDfw24sGol7Gr3cN3+X3t3PZV1kQG9vJbKDUzgDA+YbbCA==
   dependencies:
     abstract-logging "^2.0.0"
     ajv "^6.12.2"
@@ -1177,7 +1177,7 @@ fastify@^3.5.1:
     fastify-warning "^0.2.0"
     find-my-way "^3.0.0"
     flatstr "^1.0.12"
-    light-my-request "^4.0.2"
+    light-my-request "^4.1.0"
     pino "^6.2.1"
     proxy-addr "^2.0.5"
     readable-stream "^3.4.0"
@@ -1845,10 +1845,10 @@ lcov-parse@^1.0.0:
   resolved "https://registry.yarnpkg.com/lcov-parse/-/lcov-parse-1.0.0.tgz#eb0d46b54111ebc561acb4c408ef9363bdc8f7e0"
   integrity sha1-6w1GtUER68VhrLTECO+TY73I9+A=
 
-light-my-request@^4.0.2:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/light-my-request/-/light-my-request-4.1.0.tgz#77a2230fb9bdb4c559832c7ee74acef7154ac20f"
-  integrity sha512-MweHfXZh1olI/7orXZ19WL1cpm7TyrKtvgSeBAC2jojJlMEqaDxb0VgvZ3azUHVqVVLffgdai43ty/E0Nhdgvw==
+light-my-request@^4.1.0:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/light-my-request/-/light-my-request-4.1.1.tgz#71a4f5742affd21d54e70895b6c6cec08feb9bad"
+  integrity sha512-4H0T0PQcFB/fGTIkNV5ShuftWnuUKdtLWq5t2zt+lwMWRZkVviTfmJqGOXeAAqkdREnGJQXa8zJ4wXJ0LrzrTA==
   dependencies:
     ajv "^6.12.2"
     cookie "^0.4.0"
@@ -1946,10 +1946,10 @@ make-error@^1.1.1:
   resolved "https://registry.yarnpkg.com/make-error/-/make-error-1.3.6.tgz#2eb2e37ea9b67c4891f684a1394799af484cf7a2"
   integrity sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==
 
-mercurius@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/mercurius/-/mercurius-6.1.0.tgz#b9ee001bac6b075eabde7ca3b1a12e91834be8fa"
-  integrity sha512-en24XCDMZg4Tk1AaQOLTYwJHyIOYuQp/NpxqWgT+VeR//YnocRICAqwgRCGzEfV8ogLG8LDD2beASj0+0vKHOg==
+mercurius@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/mercurius/-/mercurius-6.1.1.tgz#cb9ea48248b963a05eba57552540d84d3f4a75d0"
+  integrity sha512-LG4CvGc7nG7h5rGWcuDMPGMLaYBLSBLteLgSCiN6U+2UraZ3azt32XJ68tzw9z7utftxiq/liTbbIbOXndOHlQ==
   dependencies:
     end-of-stream "^1.4.4"
     events.on "^1.0.1"
