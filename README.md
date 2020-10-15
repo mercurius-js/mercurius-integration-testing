@@ -255,6 +255,8 @@ batchedResponse ===
 
 > `.subscribe` returns a promise that resolves when the subscription connection is made
 
+> `headers` & `cookies` are applied the same as in `.query` and `.mutate`
+
 ```ts
 const subscription = await client.subscribe({
   query: `
@@ -268,8 +270,18 @@ const subscription = await client.subscribe({
   onData(data) {
     data == { notificationAdded: { id: 1, message: "hello world" } };
   },
-  // variables: { foo: "bar" }
-  // initPayload: { authorization: "your_token" }
+  // Optional
+  variables: { foo: "bar" },
+  // Optional, initialization payload, usually for authorization
+  initPayload: { authorization: "<token>" },
+  // Optional, subscription specific cookies
+  cookies: {
+    authorization: "<token>",
+  },
+  // Optional, subscription specific headers
+  headers: {
+    authorization: "<token>",
+  },
 });
 
 // You can manually call the unsubscribe

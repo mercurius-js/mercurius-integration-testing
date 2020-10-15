@@ -2,6 +2,7 @@ import type {} from "mercurius";
 import type { FastifyInstance } from "fastify";
 import type { IncomingHttpHeaders } from "http";
 
+import { serialize as serializeCookie } from "cookie";
 import getPort from "get-port";
 import { DocumentNode, GraphQLError, print } from "graphql";
 
@@ -129,6 +130,8 @@ export function createMercuriusTestClient(
         | (() => Record<string, any> | Promise<Record<string, any>>)
         | Record<string, any>;
       onData(payload: TData): void;
+      headers?: IncomingHttpHeaders;
+      cookies?: Record<string, string>;
     } & (TVariables extends object
       ? { variables: TVariables }
       : { variables?: Record<string, any> })
@@ -225,11 +228,15 @@ export function createMercuriusTestClient(
     variables = {},
     initPayload = {},
     onData,
+    headers: newHeaders = {},
+    cookies: newCookies = {},
   }: {
     query: string | DocumentNode;
     variables?: Record<string, any>;
     initPayload?: (() => Record<string, any> | Promise<Record<string, any>>) | Record<string, any>;
     onData(payload: any): void;
+    headers?: IncomingHttpHeaders;
+    cookies?: Record<string, string>;
   }) => {
     return new Promise<{
       unsubscribe: () => void;
@@ -246,7 +253,26 @@ export function createMercuriusTestClient(
           await app.listen((port = await getPort()));
         }
 
+        const combinedCookies = Object.entries({ ...cookies, ...newCookies });
+
+        const combinedHeaders = {
+          ...headers,
+          ...newHeaders,
+        };
+
         const subscriptionClient = new SubscriptionClient(`ws://localhost:${port}${url}`, {
+          headers: combinedCookies.length
+            ? {
+                ...combinedHeaders,
+                cookie: combinedCookies.reduce((acum, [key, value]) => {
+                  if (acum) {
+                    acum += "; ";
+                  }
+                  acum += serializeCookie(key, value);
+                  return acum;
+                }, ""),
+              }
+            : combinedHeaders,
           connectionInitPayload: initPayload,
           connectionCallback: () => {
             subscriptionClient.createSubscription(

@@ -71,8 +71,13 @@ app.register(mercurius, {
   schema,
   resolvers,
   subscription: {
-    async onConnect(data) {
+    async onConnect(_data) {
+      // console.log(_data)
       return {};
+    },
+    verifyClient(_info, next) {
+      // console.log(_info.req.headers);
+      next(true);
     },
   },
 });
@@ -106,6 +111,14 @@ tap
         },
         initPayload: {
           a: 123,
+        },
+        cookies: {
+          a: "1",
+          b: "2",
+        },
+        headers: {
+          c: "3",
+          d: "4",
         },
       })
       .then((sub) => {

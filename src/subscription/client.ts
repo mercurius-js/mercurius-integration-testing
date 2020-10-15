@@ -17,10 +17,16 @@ import {
   GRAPHQL_WS,
 } from "./protocol";
 
+import type { IncomingHttpHeaders } from "http";
+
 // This class is already being tested in https://github.com/mercurius-js/mercurius/blob/master/test/subscription-client.js
 /* istanbul ignore next */
 export class SubscriptionClient {
   subscriptionQueryMap: Record<string, string>;
+  socket: WebSocket;
+  protocols: string[];
+  headers;
+
   constructor(
     uri,
     config: {
@@ -32,6 +38,7 @@ export class SubscriptionClient {
       failedConnectionCallback?: Function;
       failedReconnectCallback?: Function;
       connectionInitPayload?: object;
+      headers?: IncomingHttpHeaders;
     }
   ) {
     this.uri = uri;
@@ -42,6 +49,7 @@ export class SubscriptionClient {
     this.operationsCount = {};
     this.subscriptionQueryMap = {};
     const {
+      headers = {},
       protocols = [],
       reconnect = false,
       maxReconnectAttempts = Infinity,
@@ -52,6 +60,7 @@ export class SubscriptionClient {
       connectionInitPayload = {},
     } = config;
 
+    this.headers = headers;
     this.protocols = [GRAPHQL_WS, ...protocols];
     this.tryReconnect = reconnect;
     this.maxReconnectAttempts = maxReconnectAttempts;
@@ -66,7 +75,9 @@ export class SubscriptionClient {
   }
 
   connect() {
-    this.socket = new WebSocket(this.uri, this.protocols);
+    this.socket = new WebSocket(this.uri, this.protocols, {
+      headers: this.headers,
+    });
 
     this.socket.onopen = async () => {
       /* istanbul ignore else */
