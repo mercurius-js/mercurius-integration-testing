@@ -234,17 +234,18 @@ export function createMercuriusTestClient(
     return new Promise<{
       unsubscribe: () => void;
     }>(async (resolve, reject) => {
-      let port: number;
-
-      const address = app.server.address();
-      if (typeof address === "object" && address) {
-        port = address.port;
-      } else {
-        app.log.warn("Remember to close the app instance manually");
-
-        await app.listen((port = await getPort()));
-      }
       try {
+        let port: number;
+
+        const address = app.server.address();
+        if (typeof address === "object" && address) {
+          port = address.port;
+        } else {
+          app.log.warn("Remember to close the app instance manually");
+
+          await app.listen((port = await getPort()));
+        }
+
         const subscriptionClient = new SubscriptionClient(`ws://localhost:${port}${url}`, {
           connectionInitPayload: initPayload,
           connectionCallback: () => {
