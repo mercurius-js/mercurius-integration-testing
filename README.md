@@ -10,9 +10,9 @@ npm install mercurius-integration-testing
 
 ## Features
 
+- **query**, **mutation** & **subscription** support.
 - **DocumentNode** and **string** support
 - **TypeScript** support
-- **query** | **mutation** support.
 - **batchQueries** support.
 - **headers** management.
 - **cookies** management.
@@ -28,11 +28,12 @@ npm install mercurius-integration-testing
       - [query, mutate](#query-mutate)
         - [DocumentNode support](#documentnode-support)
         - [Variables](#variables)
-        - [TypeScript](#typescript)
         - [Other options](#other-options)
       - [setHeaders](#setheaders)
       - [setCookies](#setcookies)
       - [batchQueries](#batchqueries)
+      - [subscribe](#subscribe)
+      - [TypeScript](#typescript)
   - [License](#license)
 
 ## Usage
@@ -155,48 +156,6 @@ await client.query(
 );
 ```
 
-##### TypeScript
-
-```ts
-const dataResponse = await client.query<{
-  helloWorld: string;
-}>(`
-query {
-  helloWorld
-}
-`);
-
-// string
-dataResponse.data.helloWorld;
-
-const variablesResponse = await client.query<
-  {
-    user: {
-      email: string;
-    };
-  },
-  {
-    name: string;
-  }
->(
-  `
-  query($name: String!) {
-    user(name: $name) {
-      email
-    }
-  }
-`,
-  {
-    variables: {
-      name: "bob",
-    },
-  }
-);
-
-// string
-variablesResponse.data.user.email;
-```
-
 ##### Other options
 
 ```ts
@@ -288,6 +247,103 @@ const batchedResponse = await client.batchQueries(
 
 batchedResponse ===
   [{ data: { helloWorld: "foo" } }, { data: { user: { email: "hello@world.com" } } }];
+```
+
+#### subscribe
+
+> If you are not already calling `.listen(PORT)` somewhere, it will automatically call it, assigning a random available port, this means you will have to manually call `.close()` somewhere
+
+> `.subscribe` returns a promise that resolves when the subscription connection is made
+
+```ts
+const subscription = await client.subscribe({
+  query: `
+  subscription {
+    notificationAdded {
+      id
+      message
+    }
+  }
+  `,
+  onData(data) {
+    data == { notificationAdded: { id: 1, message: "hello world" } };
+  },
+  // variables: { foo: "bar" }
+  // initPayload: { authorization: "your_token" }
+});
+
+// You can manually call the unsubscribe
+
+subscription.unsubscribe();
+
+// You will need to manually close the fastify instance somewhere
+
+app.close();
+```
+
+#### TypeScript
+
+```ts
+const dataResponse = await client.query<{
+  helloWorld: string;
+}>(`
+query {
+  helloWorld
+}
+`);
+
+// string
+dataResponse.data.helloWorld;
+
+const variablesResponse = await client.query<
+  {
+    user: {
+      email: string;
+    };
+  },
+  {
+    name: string;
+  }
+>(
+  `
+  query($name: String!) {
+    user(name: $name) {
+      email
+    }
+  }
+`,
+  {
+    variables: {
+      name: "bob",
+    },
+  }
+);
+
+// string
+variablesResponse.data.user.email;
+
+await client.subscribe<
+  {
+    helloWorld: string;
+  },
+  {
+    foo: string;
+  }
+>({
+  query: `
+  subscription($foo: String!) {
+    helloWorld(foo: $foo)
+  }
+  `,
+  variables: {
+    // Error, Type 'number' is not assignable to type 'string'.
+    foo: 123,
+  },
+  onData(data) {
+    // string
+    data.helloWorld;
+  },
+});
 ```
 
 ## License

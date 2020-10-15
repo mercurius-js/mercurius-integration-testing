@@ -1,8 +1,11 @@
 import type {} from "mercurius";
+import type { FastifyInstance } from "fastify";
+import type { IncomingHttpHeaders } from "http";
 
-import { FastifyInstance } from "fastify";
+import getPort from "get-port";
 import { DocumentNode, GraphQLError, print } from "graphql";
-import { IncomingHttpHeaders } from "http";
+
+import { SubscriptionClient } from "./subscription/client";
 
 export type GQLResponse<T> = { data: T; errors?: GraphQLError[] };
 
@@ -116,6 +119,22 @@ export function createMercuriusTestClient(
    * Global cookies added to every request in this test client.
    */
   cookies: Record<string, string>;
+  /**
+   * GraphQL Subscription
+   */
+  subscribe: <TData = any, TVariables extends Record<string, any> | undefined = undefined>(
+    opts: {
+      query: string | DocumentNode;
+      initPayload?:
+        | (() => Record<string, any> | Promise<Record<string, any>>)
+        | Record<string, any>;
+      onData(payload: TData): void;
+    } & (TVariables extends object
+      ? { variables: TVariables }
+      : { variables?: Record<string, any> })
+  ) => Promise<{
+    unsubscribe: () => void;
+  }>;
 } {
   let headers = opts.headers || {};
   let cookies = opts.cookies || {};
@@ -201,6 +220,59 @@ export function createMercuriusTestClient(
     return responses;
   };
 
+  const subscribe = ({
+    query,
+    variables = {},
+    initPayload = {},
+    onData,
+  }: {
+    query: string | DocumentNode;
+    variables?: Record<string, any>;
+    initPayload?: (() => Record<string, any> | Promise<Record<string, any>>) | Record<string, any>;
+    onData(payload: any): void;
+  }) => {
+    return new Promise<{
+      unsubscribe: () => void;
+    }>(async (resolve, reject) => {
+      let port: number;
+
+      const address = app.server.address();
+      if (typeof address === "object" && address) {
+        port = address.port;
+      } else {
+        app.log.warn("Remember to close the app instance manually");
+
+        await app.listen((port = await getPort()));
+      }
+      try {
+        const subscriptionClient = new SubscriptionClient(`ws://localhost:${port}${url}`, {
+          connectionInitPayload: initPayload,
+          connectionCallback: () => {
+            subscriptionClient.createSubscription(
+              typeof query === "string" ? query : print(query),
+              variables,
+              ({ payload }: { topic: string; payload: any }) => {
+                onData(payload);
+              }
+            );
+
+            setTimeout(() => {
+              resolve({
+                unsubscribe() {
+                  subscriptionClient.close();
+                },
+              });
+            }, 20);
+          },
+          failedConnectionCallback: reject,
+        });
+      } catch (err) {
+        /* istanbul ignore next */
+        reject(err);
+      }
+    });
+  };
+
   return {
     query,
     mutate: query,
@@ -209,5 +281,6 @@ export function createMercuriusTestClient(
     cookies,
     setCookies,
     batchQueries,
+    subscribe,
   };
 }
