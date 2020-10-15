@@ -275,26 +275,39 @@ export function createMercuriusTestClient(
             : combinedHeaders,
           connectionInitPayload: initPayload,
           connectionCallback: () => {
-            subscriptionClient.createSubscription(
-              typeof query === "string" ? query : print(query),
-              variables,
-              ({ payload }: { topic: string; payload: any }) => {
-                onData(payload);
-              }
-            );
-
-            setTimeout(() => {
-              resolve({
-                unsubscribe() {
-                  subscriptionClient.close();
-                },
-              });
-            }, 20);
+            try {
+              subscriptionClient
+                .createSubscription(
+                  typeof query === "string" ? query : print(query),
+                  variables,
+                  ({ payload }: { topic: string; payload: any }) => {
+                    onData(payload);
+                  }
+                )
+                .then(() => {
+                  setTimeout(() => {
+                    resolve({
+                      unsubscribe() {
+                        subscriptionClient.close();
+                      },
+                    });
+                  }, 0);
+                })
+                .catch(
+                  /* istanbul ignore next */
+                  (err) => {
+                    reject(err);
+                    subscriptionClient.close();
+                  }
+                );
+            } catch (err) {
+              reject(err);
+              subscriptionClient.close();
+            }
           },
           failedConnectionCallback: reject,
         });
       } catch (err) {
-        /* istanbul ignore next */
         reject(err);
       }
     });

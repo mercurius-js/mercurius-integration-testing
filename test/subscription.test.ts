@@ -139,38 +139,38 @@ tap
       });
   })
   .then(() => {
-    tap.test("subscriptions with reuse listen", (t) => {
-      t.plan(1);
+    tap
+      .test("subscriptions with reuse listen", (t) => {
+        t.plan(1);
 
-      const client = createMercuriusTestClient(app);
+        const client = createMercuriusTestClient(app);
 
-      const subscription = client
-        .subscribe({
-          query: gql`
-            subscription {
-              notificationAdded {
-                id
-                message
+        const subscription = client
+          .subscribe({
+            query: gql`
+              subscription {
+                notificationAdded {
+                  id
+                  message
+                }
               }
-            }
-          `,
-          onData: (data) => {
-            t.equivalent(data, {
-              notificationAdded: {
-                id: 2,
-                message: "hello world",
-              },
-            });
-            subscription.then((sub) => {
-              sub.unsubscribe();
-              app.close();
-            });
-          },
-        })
-        .then((sub) => {
-          client
-            .mutate(
-              `
+            `,
+            onData: (data) => {
+              t.equivalent(data, {
+                notificationAdded: {
+                  id: 2,
+                  message: "hello world",
+                },
+              });
+              subscription.then((sub) => {
+                sub.unsubscribe();
+              });
+            },
+          })
+          .then((sub) => {
+            client
+              .mutate(
+                `
      mutation {
          addNotification(message: "hello world") {
           id
@@ -178,10 +178,38 @@ tap
       }
      }
      `
-            )
-            .catch(console.error);
+              )
 
-          return sub;
-        });
-    });
+              .catch(console.error);
+
+            return sub;
+          });
+      })
+      .then(() => {
+        tap
+          .test("error handling", (t) => {
+            t.plan(2);
+            const client = createMercuriusTestClient(app);
+            t.rejects(
+              client.subscribe({
+                query: {} as any,
+                onData() {},
+              }),
+              Error("Invalid AST Node")
+            );
+
+            const errorClient = createMercuriusTestClient({} as any);
+
+            t.rejects(
+              errorClient.subscribe({
+                query: "",
+                onData(_data) {},
+              }),
+              Error("Cannot read property")
+            );
+          })
+          .then(() => {
+            app.close();
+          });
+      });
   });

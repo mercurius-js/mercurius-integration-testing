@@ -177,14 +177,26 @@ export class SubscriptionClient {
   }
 
   sendMessage(operationId, type, payload = {}, extensions) {
-    this.socket.send(
-      JSON.stringify({
-        id: operationId,
-        type,
-        payload,
-        extensions,
-      })
-    );
+    return new Promise<void>((resolve, reject) => {
+      try {
+        this.socket.send(
+          JSON.stringify({
+            id: operationId,
+            type,
+            payload,
+            extensions,
+          }),
+          (err) => {
+            if (err) {
+              reject(err);
+            }
+            resolve();
+          }
+        );
+      } catch (err) {
+        reject(err);
+      }
+    });
   }
 
   async handleMessage(message) {
@@ -263,8 +275,9 @@ export class SubscriptionClient {
         throw new Error("Connection is not ready");
       }
       this.operations.set(operationId, { started: true, options, handler, extensions });
-      this.sendMessage(operationId, GQL_START, options, extensions);
+      return this.sendMessage(operationId, GQL_START, options, extensions);
     }
+    return Promise.resolve();
   }
 
   createSubscription(query, variables, publish, connectionInit: Record<string, any> = undefined) {
@@ -273,7 +286,7 @@ export class SubscriptionClient {
 
     if (operationId && this.operations.get(operationId)) {
       this.operationsCount[operationId] = this.operationsCount[operationId] + 1;
-      return operationId;
+      return Promise.resolve();
     }
 
     operationId = String(++this.operationId);
@@ -299,11 +312,11 @@ export class SubscriptionClient {
     }
 
     this.operations.set(operationId, operation);
-    this.startOperation(operationId);
+    const startPromise = this.startOperation(operationId);
     this.operationsCount[operationId] = 1;
 
     this.subscriptionQueryMap[subscriptionString] = operationId;
 
-    return operationId;
+    return startPromise;
   }
 }
