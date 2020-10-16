@@ -285,13 +285,13 @@ export function createMercuriusTestClient(
                   }
                 )
                 .then(() => {
-                  setTimeout(() => {
+                  setImmediate(() => {
                     resolve({
                       unsubscribe() {
                         subscriptionClient.close();
                       },
                     });
-                  }, 0);
+                  });
                 })
                 .catch(
                   /* istanbul ignore next */
