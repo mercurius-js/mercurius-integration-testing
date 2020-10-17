@@ -1,7 +1,6 @@
 //@ts-nocheck
 
 // Based on https://github.com/mercurius-js/mercurius/blob/master/lib/subscription-client.js
-
 import WebSocket from 'ws'
 
 import {
