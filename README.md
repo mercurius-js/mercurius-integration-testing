@@ -3,6 +3,8 @@
 [![npm version](https://badge.fury.io/js/mercurius-integration-testing.svg)](https://badge.fury.io/js/mercurius-integration-testing) [![codecov](https://codecov.io/gh/PabloSzx/mercurius-integration-testing/branch/master/graph/badge.svg)](https://codecov.io/gh/PabloSzx/mercurius-integration-testing)
 
 ```sh
+pnpm add mercurius-integration-testing
+# or
 yarn add mercurius-integration-testing
 # or
 npm install mercurius-integration-testing
@@ -40,36 +42,36 @@ npm install mercurius-integration-testing
 
 ```ts
 // app.ts | app.js
-import Fastify from "fastify";
-import Mercurius from "mercurius";
-import schema from "./schema";
-import { buildContext } from "./buildContext";
+import Fastify from 'fastify'
+import Mercurius from 'mercurius'
+import schema from './schema'
+import { buildContext } from './buildContext'
 
-export const app = Fastify();
+export const app = Fastify()
 
 app.register(Mercurius, {
   schema,
   resolvers: {},
   context: buildContext,
   allowBatchedQueries: true,
-});
+})
 ```
 
 ```ts
 // integration.test.js | integration.test.ts
 
-import { createMercuriusTestClient } from "mercurius-integration-testing";
-import { app } from "../app";
+import { createMercuriusTestClient } from 'mercurius-integration-testing'
+import { app } from '../app'
 
 // ...
 
-const testClient = createMercuriusTestClient(app);
+const testClient = createMercuriusTestClient(app)
 
-expect(testClient.query("query { helloWorld }")).resolves.toEqual({
+expect(testClient.query('query { helloWorld }')).resolves.toEqual({
   data: {
-    helloWorld: "helloWorld",
+    helloWorld: 'helloWorld',
   },
-});
+})
 ```
 
 ## API
@@ -84,19 +86,19 @@ const client = createMercuriusTestClient(app, {
    * Optional, specify headers to be added to every request in the client
    */
   headers: {
-    authorization: "hello-world",
+    authorization: 'hello-world',
   },
   /**
    * Optional, by default it points to /graphql
    */
-  url: "/graphql",
+  url: '/graphql',
   /**
    * Optional, specify cookies to be added to every request in the client
    */
   cookies: {
-    authorization: "hello-world",
+    authorization: 'hello-world',
   },
-});
+})
 ```
 
 #### query, mutate
@@ -109,13 +111,13 @@ const queryResponse = await client.query(`
 query {
   helloWorld
 }
-`);
+`)
 
 // Data returned from the API
-queryResponse.data;
+queryResponse.data
 
 // Possible array of errors from the API
-queryResponse.errors;
+queryResponse.errors
 
 // You can also call `mutate`
 // to improve readability for mutations
@@ -123,7 +125,7 @@ const mutationResponse = await client.mutate(`
 mutation {
   helloWorld
 }
-`);
+`)
 ```
 
 ##### DocumentNode support
@@ -135,7 +137,7 @@ await client.query(gql`
   query {
     helloWorld
   }
-`);
+`)
 ```
 
 ##### Variables
@@ -150,10 +152,10 @@ await client.query(
 `,
   {
     variables: {
-      foo: "bar",
+      foo: 'bar',
     },
   }
-);
+)
 ```
 
 ##### Other options
@@ -168,20 +170,20 @@ await client.query(
   {
     // You can specify operation name if the queries
     // are named
-    operationName: "helloExample",
+    operationName: 'helloExample',
     // Query specific headers
     // These are going to be "merged" with the client set headers
     headers: {
-      hello: "world",
+      hello: 'world',
     },
 
     // Query specific cookies
     // These are going to be "merged" with the client set headers
     cookies: {
-      foo: "bar",
+      foo: 'bar',
     },
   }
-);
+)
 ```
 
 #### setHeaders
@@ -190,8 +192,8 @@ You can change the default client headers whenever
 
 ```ts
 client.setHeaders({
-  authorization: "other-header",
-});
+  authorization: 'other-header',
+})
 ```
 
 #### setCookies
@@ -200,8 +202,8 @@ You can change the default client cookies whenever
 
 ```ts
 client.setCookies({
-  authorization: "other-cookie",
-});
+  authorization: 'other-cookie',
+})
 ```
 
 #### batchQueries
@@ -227,7 +229,7 @@ const batchedResponse = await client.batchQueries(
   }
   `,
       variables: {
-        name: "bob",
+        name: 'bob',
       },
       // operationName: "you-can-specify-it-here-if-needed"
     },
@@ -236,17 +238,20 @@ const batchedResponse = await client.batchQueries(
   {
     // Optional request specific cookies
     cookies: {
-      foo: "bar",
+      foo: 'bar',
     },
     // Optional request specific headers
     headers: {
-      foo: "bar",
+      foo: 'bar',
     },
   }
-);
+)
 
 batchedResponse ===
-  [{ data: { helloWorld: "foo" } }, { data: { user: { email: "hello@world.com" } } }];
+  [
+    { data: { helloWorld: 'foo' } },
+    { data: { user: { email: 'hello@world.com' } } },
+  ]
 ```
 
 #### subscribe
@@ -267,54 +272,56 @@ const subscription = await client.subscribe({
     }
   }
   `,
-  onData(data) {
-    data == { notificationAdded: { id: 1, message: "hello world" } };
+  onData(response) {
+    // response.errors => array of graphql errors or undefined
+    response ==
+      { data: { notificationAdded: { id: 1, message: 'hello world' } } }
   },
   // Optional
-  variables: { foo: "bar" },
+  variables: { foo: 'bar' },
   // Optional, initialization payload, usually for authorization
-  initPayload: { authorization: "<token>" },
+  initPayload: { authorization: '<token>' },
   // Optional, subscription specific cookies
   cookies: {
-    authorization: "<token>",
+    authorization: '<token>',
   },
   // Optional, subscription specific headers
   headers: {
-    authorization: "<token>",
+    authorization: '<token>',
   },
-});
+})
 
 // You can manually call the unsubscribe
 
-subscription.unsubscribe();
+subscription.unsubscribe()
 
 // You will need to manually close the fastify instance somewhere
 
-app.close();
+app.close()
 ```
 
 #### TypeScript
 
 ```ts
 const dataResponse = await client.query<{
-  helloWorld: string;
+  helloWorld: string
 }>(`
 query {
   helloWorld
 }
-`);
+`)
 
 // string
-dataResponse.data.helloWorld;
+dataResponse.data.helloWorld
 
 const variablesResponse = await client.query<
   {
     user: {
-      email: string;
-    };
+      email: string
+    }
   },
   {
-    name: string;
+    name: string
   }
 >(
   `
@@ -326,20 +333,20 @@ const variablesResponse = await client.query<
 `,
   {
     variables: {
-      name: "bob",
+      name: 'bob',
     },
   }
-);
+)
 
 // string
-variablesResponse.data.user.email;
+variablesResponse.data.user.email
 
 await client.subscribe<
   {
-    helloWorld: string;
+    helloWorld: string
   },
   {
-    foo: string;
+    foo: string
   }
 >({
   query: `
@@ -351,11 +358,11 @@ await client.subscribe<
     // Error, Type 'number' is not assignable to type 'string'.
     foo: 123,
   },
-  onData(data) {
+  onData(response) {
     // string
-    data.helloWorld;
+    response.data.helloWorld
   },
-});
+})
 ```
 
 ## License
