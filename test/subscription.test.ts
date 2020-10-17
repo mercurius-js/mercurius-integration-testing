@@ -133,15 +133,16 @@ tap
     const subscription = client
       .subscribe({
         query: `
-        subscription {
+        subscription firstNotification {
           notificationAdded {
             id
             message
           }
         }
         `,
-        onData: (data) => {
-          t.equivalent(data, {
+        operationName: 'firstNotification',
+        onData: (response) => {
+          t.equivalent(response, {
             data: {
               notificationAdded: {
                 id: 1,
@@ -248,7 +249,7 @@ tap
 
             t.rejects(
               errorClient.subscribe({
-                query: '',
+                query: 'subscription {}',
                 onData(_data) {},
               }),
               Error('Invalid Fastify Instance')

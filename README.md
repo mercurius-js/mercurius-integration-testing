@@ -279,6 +279,8 @@ const subscription = await client.subscribe({
   },
   // Optional
   variables: { foo: 'bar' },
+  // Optional
+  operationName: 'name_if_is_named_query',
   // Optional, initialization payload, usually for authorization
   initPayload: { authorization: '<token>' },
   // Optional, subscription specific cookies

@@ -135,6 +135,7 @@ export function createMercuriusTestClient(
       onData(response: GQLResponse<TData>): void
       headers?: IncomingHttpHeaders
       cookies?: Record<string, string>
+      operationName?: string
     } & (TVariables extends object
       ? { variables: TVariables }
       : { variables?: Record<string, any> })
@@ -142,20 +143,20 @@ export function createMercuriusTestClient(
     unsubscribe: () => void
   }>
 } {
-  const readyPromise = new Promise<void>((resolve, reject) => {
+  const readyPromise = new Promise<void>(async (resolve, reject) => {
     try {
-      app.ready((err) => {
-        if (err) {
-          reject(err)
-        }
-        if (app.graphql) {
-          resolve()
-        } else {
-          reject(Error('Mercurius is not registered in Fastify Instance!'))
-        }
-      })
+      await app.ready()
+
+      if (app.graphql) {
+        resolve()
+      } else {
+        reject(Error('Mercurius is not registered in Fastify Instance!'))
+      }
     } catch (err) {
-      reject(Error('Invalid Fastify Instance'))
+      if (err.message === 'app.ready is not a function') {
+        return reject(Error('Invalid Fastify Instance'))
+      }
+      reject(err)
     }
   })
   let headers = opts.headers || {}
@@ -252,6 +253,7 @@ export function createMercuriusTestClient(
   const subscribe = ({
     query,
     variables = {},
+    operationName,
     initPayload = {},
     onData,
     headers: newHeaders = {},
@@ -259,6 +261,7 @@ export function createMercuriusTestClient(
   }: {
     query: string | DocumentNode
     variables?: Record<string, unknown>
+    operationName?: string
     initPayload?:
       | (() => Record<string, unknown> | Promise<Record<string, unknown>>)
       | Record<string, unknown>
@@ -314,7 +317,8 @@ export function createMercuriusTestClient(
                     variables,
                     ({ payload }: { topic: string; payload: any }) => {
                       onData(payload)
-                    }
+                    },
+                    operationName
                   )
                   .then(() => {
                     setImmediate(() => {

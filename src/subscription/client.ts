@@ -1,5 +1,4 @@
-//@ts-nocheck
-
+import { GraphQLError } from 'graphql'
 // Based on https://github.com/mercurius-js/mercurius/blob/master/lib/subscription-client.js
 import WebSocket from 'ws'
 
@@ -17,17 +16,43 @@ import {
 } from './protocol'
 
 import type { IncomingHttpHeaders } from 'http'
+type Operation = {
+  started: boolean
+  options: {
+    query: string
+    variables: Record<string, unknown>
+    operationName: string | undefined
+  }
+  handler: (data: unknown) => Promise<void>
+  extensions?: { type: string; payload: unknown }[]
+}
 
 // This class is already being tested in https://github.com/mercurius-js/mercurius/blob/master/test/subscription-client.js
 /* istanbul ignore next */
 export class SubscriptionClient {
   subscriptionQueryMap: Record<string, string>
-  socket: WebSocket
+  socket: WebSocket | null
   protocols: string[]
-  headers
+  headers: IncomingHttpHeaders
+  uri: string
+  operationId: number
+  ready: boolean
+  operations: Map<string, Operation>
+  operationsCount: Record<string | number, number>
+  tryReconnect: boolean
+  maxReconnectAttempts: number
+  serviceName?: string
+  reconnectAttempts: number
+  connectionCallback?: Function
+  failedConnectionCallback?: Function
+  failedReconnectCallback?: Function
+  connectionInitPayload?: unknown
+  closedByUser?: boolean
+  reconnecting?: boolean
+  reconnectTimeoutId?: NodeJS.Timeout
 
   constructor(
-    uri,
+    uri: string,
     config: {
       protocols?: []
       reconnect?: boolean
@@ -102,7 +127,7 @@ export class SubscriptionClient {
     this.socket.onerror = () => {}
 
     this.socket.onmessage = async ({ data }) => {
-      await this.handleMessage(data)
+      await this.handleMessage(data.toString('utf-8'))
     }
   }
 
@@ -121,16 +146,18 @@ export class SubscriptionClient {
 
       if (tryReconnect) {
         for (const operationId of this.operations.keys()) {
-          const { options, handler, extensions } = this.operations.get(
-            operationId
-          )
+          const operation = this.operations.get(operationId)
 
-          this.operations.set(operationId, {
-            options,
-            handler,
-            extensions,
-            started: false,
-          })
+          if (operation) {
+            const { options, handler, extensions } = operation
+
+            this.operations.set(operationId, {
+              options,
+              handler,
+              extensions,
+              started: false,
+            })
+          }
         }
 
         this.reconnect()
@@ -162,7 +189,7 @@ export class SubscriptionClient {
     }, delay)
   }
 
-  unsubscribe(operationId: string, forceUnsubscribe = false) {
+  unsubscribe(operationId: string | number, forceUnsubscribe = false) {
     let count = this.operationsCount[operationId]
     count--
 
@@ -180,9 +207,16 @@ export class SubscriptionClient {
     }
   }
 
-  sendMessage(operationId, type, payload = {}, extensions) {
+  sendMessage(
+    operationId: number | string | null,
+    type: string,
+    payload: unknown = {},
+    extensions?: unknown
+  ) {
     return new Promise<void>((resolve, reject) => {
       try {
+        if (!this.socket) return reject(Error('No socket available'))
+
         this.socket.send(
           JSON.stringify({
             id: operationId,
@@ -192,7 +226,7 @@ export class SubscriptionClient {
           }),
           (err) => {
             if (err) {
-              reject(err)
+              return reject(err)
             }
             resolve()
           }
@@ -203,7 +237,7 @@ export class SubscriptionClient {
     })
   }
 
-  async handleMessage(message) {
+  async handleMessage(message: string) {
     let data
     let operationId
     let operation
@@ -248,7 +282,10 @@ export class SubscriptionClient {
       case GQL_ERROR:
         /* istanbul ignore else */
         if (operation) {
-          operation.handler(null)
+          operation.handler({
+            data: null,
+            errors: [new GraphQLError(data.payload)],
+          })
           this.operations.delete(operationId)
           this.sendMessage(operationId, GQL_ERROR, data.payload)
         }
@@ -276,10 +313,11 @@ export class SubscriptionClient {
     }
   }
 
-  startOperation(operationId) {
-    const { started, options, handler, extensions } = this.operations.get(
-      operationId
-    )
+  startOperation(operationId: string) {
+    const operation = this.operations.get(operationId)
+    if (!operation) throw Error('Operation not found, ' + operationId)
+    const { started, options, handler, extensions } = operation
+
     if (!started) {
       if (!this.ready) {
         throw new Error('Connection is not ready')
@@ -296,12 +334,17 @@ export class SubscriptionClient {
   }
 
   createSubscription(
-    query,
-    variables,
-    publish,
-    connectionInit: Record<string, any> = undefined
+    query: string,
+    variables: Record<string, unknown>,
+    publish: (args: { topic: string; payload: any }) => void | Promise<void>,
+    operationName?: string,
+    connectionInit?: Record<string, any>
   ) {
-    const subscriptionString = JSON.stringify({ query, variables })
+    const subscriptionString = JSON.stringify({
+      query,
+      variables,
+      operationName,
+    })
     let operationId = this.subscriptionQueryMap[subscriptionString]
 
     if (operationId && this.operations.get(operationId)) {
@@ -311,10 +354,10 @@ export class SubscriptionClient {
 
     operationId = String(++this.operationId)
 
-    const operation = {
+    const operation: Operation = {
       started: false,
-      options: { query, variables },
-      handler: async (data) => {
+      options: { query, variables, operationName },
+      handler: async (data: unknown) => {
         await publish({
           topic: `${this.serviceName}_${operationId}`,
           payload: data,
