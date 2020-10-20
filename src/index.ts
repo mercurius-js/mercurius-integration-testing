@@ -12,12 +12,15 @@ import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
 
 export type GQLResponse<T> = { data: T; errors?: GraphQLError[] }
 
-export type QueryOptions<TVariables = Record<string, any>> = {
-  variables?: TVariables
+export type QueryOptions<
+  TVariables extends Record<string, unknown> | undefined = undefined
+> = {
   operationName?: string | null
   headers?: IncomingHttpHeaders
   cookies?: Record<string, string>
-}
+} & (TVariables extends object
+  ? { variables: TVariables }
+  : { variables?: Record<string, any> })
 
 export function createMercuriusTestClient(
   /**
@@ -49,7 +52,7 @@ export function createMercuriusTestClient(
   /**
    * Query function.
    *
-   * @param query Query to be sent. It can be a `graphql-tag` or a string.
+   * @param query Query to be sent. It can be a DocumentNode or string.
    * @param queryOptions Query specific options, including:
    * - variables
    * - operationName
@@ -58,15 +61,17 @@ export function createMercuriusTestClient(
    */
   query: <
     TData extends Record<string, unknown> = Record<string, any>,
-    TVariables extends Record<string, unknown> = Record<string, unknown>
+    TVariables extends Record<string, unknown> | undefined = undefined
   >(
     query: TypedDocumentNode<TData, TVariables> | DocumentNode | string,
-    queryOptions?: QueryOptions<TVariables>
+    ...queryOptions: TVariables extends object
+      ? [QueryOptions<TVariables>]
+      : [QueryOptions<TVariables>?]
   ) => Promise<GQLResponse<TData>>
   /**
    * Mutation function.
    *
-   * @param mutation Mutation to be sent. It can be a `graphql-tag` or a string.
+   * @param mutation Mutation to be sent. It can be a DocumentNode or string.
    * @param mutationOptions Query specific options, including:
    * - variables
    * - operationName
@@ -75,10 +80,12 @@ export function createMercuriusTestClient(
    */
   mutate: <
     TData extends Record<string, unknown> = Record<string, any>,
-    TVariables extends Record<string, unknown> = Record<string, unknown>
+    TVariables extends Record<string, unknown> | undefined = undefined
   >(
     mutation: TypedDocumentNode<TData, TVariables> | DocumentNode | string,
-    mutationOptions?: QueryOptions<TVariables>
+    ...mutationOptions: TVariables extends object
+      ? [QueryOptions<TVariables>]
+      : [QueryOptions<TVariables>?]
   ) => Promise<GQLResponse<TData>>
   /**
    * Set new global headers to this test client instance.
@@ -119,18 +126,36 @@ export function createMercuriusTestClient(
    * GraphQL Subscription
    */
   subscribe: <
-    TData extends Record<string, unknown> = any,
+    TData extends Record<string, unknown> = Record<string, any>,
     TVariables extends Record<string, unknown> | undefined = undefined
   >(
     opts: {
-      query: string | DocumentNode
+      /**
+       * Subscription query, can be a DocumentNode or string
+       */
+      query: string | DocumentNode | TypedDocumentNode<TData, TVariables>
+      /**
+       * Initial payload, usually for authorization
+       */
       initPayload?:
         | (() => Record<string, any> | Promise<Record<string, any>>)
         | Record<string, any>
+      /**
+       * Subscription data function
+       */
       onData(response: GQLResponse<TData>): void
+      /**
+       * Subscription specific headers
+       */
       headers?: IncomingHttpHeaders
+      /**
+       * Subscription specific cookies
+       */
       cookies?: Record<string, string>
-      operationName?: string
+      /**
+       * query operationName
+       */
+      operationName?: string | null
     } & (TVariables extends object
       ? { variables: TVariables }
       : { variables?: Record<string, any> })
@@ -161,11 +186,13 @@ export function createMercuriusTestClient(
 
   const query = async (
     query: string | DocumentNode | TypedDocumentNode,
-    queryOptions: QueryOptions<Record<string, unknown>> = {}
+    queryOptions: QueryOptions<Record<string, unknown> | undefined> = {
+      variables: {},
+    }
   ) => {
     await readyPromise
     const {
-      variables = {} as Record<string, unknown>,
+      variables = {},
       operationName = null,
       headers: querySpecificHeaders = {},
       cookies: querySpecificCookies = {},
@@ -252,9 +279,9 @@ export function createMercuriusTestClient(
     headers: newHeaders = {},
     cookies: newCookies = {},
   }: {
-    query: string | DocumentNode
+    query: string | DocumentNode | TypedDocumentNode
     variables?: Record<string, unknown>
-    operationName?: string
+    operationName?: string | null
     initPayload?:
       | (() => Record<string, unknown> | Promise<Record<string, unknown>>)
       | Record<string, unknown>

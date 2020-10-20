@@ -21,7 +21,7 @@ type Operation = {
   options: {
     query: string
     variables: Record<string, unknown>
-    operationName: string | undefined
+    operationName: string | undefined | null
   }
   handler: (data: unknown) => Promise<void>
   extensions?: { type: string; payload: unknown }[]
@@ -337,7 +337,7 @@ export class SubscriptionClient {
     query: string,
     variables: Record<string, unknown>,
     publish: (args: { topic: string; payload: any }) => void | Promise<void>,
-    operationName?: string,
+    operationName?: string | null,
     connectionInit?: Record<string, any>
   ) {
     const subscriptionString = JSON.stringify({

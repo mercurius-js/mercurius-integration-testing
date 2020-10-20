@@ -69,28 +69,53 @@ app.register(Mercurius, {
 const client = createMercuriusTestClient(app)
 
 tap.test('query', async (t) => {
-  t.plan(2)
+  t.plan(3)
 
-  t.equal(
-    (
-      await client.query<AddQuery>(`
+  t.equivalent(
+    await client.query<AddQuery>(
+      `
         query {
             add(x: 1, y: 2)
         }
-    `)
-    ).data.add,
-    3
+    `,
+      {}
+    ),
+    {
+      data: {
+        add: 3,
+      },
+    }
   )
 
-  t.equal(
-    (
-      await client.query<AddQuery>(gql`
-        query {
-          add(x: 1, y: 2)
+  t.equivalent(
+    await client.query<AddQuery>(gql`
+      query {
+        add(x: 1, y: 2)
+      }
+    `),
+    {
+      data: {
+        add: 3,
+      },
+    }
+  )
+
+  t.equivalent(
+    await client.query<AddQuery>(
+      gql`
+        query AddQuery {
+          add(x: 3, y: 2)
         }
-      `)
-    ).data.add,
-    3
+      `,
+      {
+        operationName: null,
+      }
+    ),
+    {
+      data: {
+        add: 5,
+      },
+    }
   )
 })
 
