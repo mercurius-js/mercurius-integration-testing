@@ -8,6 +8,8 @@ import { DocumentNode, GraphQLError, print } from 'graphql'
 
 import { SubscriptionClient } from './subscription/client'
 
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core'
+
 export type GQLResponse<T> = { data: T; errors?: GraphQLError[] }
 
 export type QueryOptions<TVariables = Record<string, any>> = {
@@ -16,24 +18,6 @@ export type QueryOptions<TVariables = Record<string, any>> = {
   headers?: IncomingHttpHeaders
   cookies?: Record<string, string>
 }
-
-/**
- * Query | Mutation function.
- *
- * @param query Query | Mutation to be sent. It can be a `graphql-tag` or a string.
- * @param queryOptions Query specific options, including:
- * - variables
- * - operationName
- * - headers
- * - cookies
- */
-type QueryFn = <
-  TData extends Record<string, unknown> = Record<string, any>,
-  TVariables extends Record<string, unknown> = Record<string, any>
->(
-  query: DocumentNode | string,
-  queryOptions?: QueryOptions<TVariables>
-) => Promise<GQLResponse<TData>>
 
 export function createMercuriusTestClient(
   /**
@@ -72,19 +56,30 @@ export function createMercuriusTestClient(
    * - headers
    * - cookies
    */
-
-  query: QueryFn
+  query: <
+    TData extends Record<string, unknown> = Record<string, any>,
+    TVariables extends Record<string, unknown> = Record<string, unknown>
+  >(
+    query: TypedDocumentNode<TData, TVariables> | DocumentNode | string,
+    queryOptions?: QueryOptions<TVariables>
+  ) => Promise<GQLResponse<TData>>
   /**
    * Mutation function.
    *
-   * @param query Mutation to be sent. It can be a `graphql-tag` or a string.
-   * @param queryOptions Query specific options, including:
+   * @param mutation Mutation to be sent. It can be a `graphql-tag` or a string.
+   * @param mutationOptions Query specific options, including:
    * - variables
    * - operationName
    * - headers
    * - cookies
    */
-  mutate: QueryFn
+  mutate: <
+    TData extends Record<string, unknown> = Record<string, any>,
+    TVariables extends Record<string, unknown> = Record<string, unknown>
+  >(
+    mutation: TypedDocumentNode<TData, TVariables> | DocumentNode | string,
+    mutationOptions?: QueryOptions<TVariables>
+  ) => Promise<GQLResponse<TData>>
   /**
    * Set new global headers to this test client instance.
    * @param newHeaders new Global headers to be set for the test client.
@@ -164,15 +159,13 @@ export function createMercuriusTestClient(
 
   const url = opts.url || '/graphql'
 
-  const query: QueryFn = async <
-    TVariables extends Record<string, unknown> = Record<string, unknown>
-  >(
-    query: string | DocumentNode,
-    queryOptions: QueryOptions<TVariables> = {}
+  const query = async (
+    query: string | DocumentNode | TypedDocumentNode,
+    queryOptions: QueryOptions<Record<string, unknown>> = {}
   ) => {
     await readyPromise
     const {
-      variables = {} as TVariables,
+      variables = {} as Record<string, unknown>,
       operationName = null,
       headers: querySpecificHeaders = {},
       cookies: querySpecificCookies = {},

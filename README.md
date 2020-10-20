@@ -15,6 +15,7 @@ npm install mercurius-integration-testing
 - **query**, **mutation** & **subscription** support.
 - **DocumentNode** and **string** support
 - **TypeScript** support
+  - Support for [graphql-typed-document-node](https://github.com/dotansimha/graphql-typed-document-node), therefore, support for [GraphQL Code Generator](https://graphql-code-generator.com/)
 - **batchQueries** support.
 - **headers** management.
 - **cookies** management.
