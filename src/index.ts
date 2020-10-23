@@ -18,9 +18,8 @@ export type QueryOptions<
   operationName?: string | null
   headers?: IncomingHttpHeaders
   cookies?: Record<string, string>
-} & (TVariables extends object
-  ? { variables: TVariables }
-  : { variables?: Record<string, any> })
+  variables?: TVariables
+}
 
 export function createMercuriusTestClient(
   /**
@@ -64,9 +63,7 @@ export function createMercuriusTestClient(
     TVariables extends Record<string, unknown> | undefined = undefined
   >(
     query: TypedDocumentNode<TData, TVariables> | DocumentNode | string,
-    ...queryOptions: TVariables extends object
-      ? [QueryOptions<TVariables>]
-      : [QueryOptions<TVariables>?]
+    queryOptions?: QueryOptions<TVariables>
   ) => Promise<GQLResponse<TData>>
   /**
    * Mutation function.
@@ -83,9 +80,7 @@ export function createMercuriusTestClient(
     TVariables extends Record<string, unknown> | undefined = undefined
   >(
     mutation: TypedDocumentNode<TData, TVariables> | DocumentNode | string,
-    ...mutationOptions: TVariables extends object
-      ? [QueryOptions<TVariables>]
-      : [QueryOptions<TVariables>?]
+    mutationOptions?: QueryOptions<TVariables>
   ) => Promise<GQLResponse<TData>>
   /**
    * Set new global headers to this test client instance.
@@ -128,38 +123,38 @@ export function createMercuriusTestClient(
   subscribe: <
     TData extends Record<string, unknown> = Record<string, any>,
     TVariables extends Record<string, unknown> | undefined = undefined
-  >(
-    opts: {
-      /**
-       * Subscription query, can be a DocumentNode or string
-       */
-      query: string | DocumentNode | TypedDocumentNode<TData, TVariables>
-      /**
-       * Initial payload, usually for authorization
-       */
-      initPayload?:
-        | (() => Record<string, any> | Promise<Record<string, any>>)
-        | Record<string, any>
-      /**
-       * Subscription data function
-       */
-      onData(response: GQLResponse<TData>): void
-      /**
-       * Subscription specific headers
-       */
-      headers?: IncomingHttpHeaders
-      /**
-       * Subscription specific cookies
-       */
-      cookies?: Record<string, string>
-      /**
-       * query operationName
-       */
-      operationName?: string | null
-    } & (TVariables extends object
-      ? { variables: TVariables }
-      : { variables?: Record<string, any> })
-  ) => Promise<{
+  >(opts: {
+    /**
+     * Subscription query, can be a DocumentNode or string
+     */
+    query: string | DocumentNode | TypedDocumentNode<TData, TVariables>
+    /**
+     * Initial payload, usually for authorization
+     */
+    initPayload?:
+      | (() => Record<string, any> | Promise<Record<string, any>>)
+      | Record<string, any>
+    /**
+     * Subscription data function
+     */
+    onData(response: GQLResponse<TData>): void
+    /**
+     * Subscription specific headers
+     */
+    headers?: IncomingHttpHeaders
+    /**
+     * Subscription specific cookies
+     */
+    cookies?: Record<string, string>
+    /**
+     * query operationName
+     */
+    operationName?: string | null
+    /**
+     * subscription variables
+     */
+    variables?: TVariables
+  }) => Promise<{
     unsubscribe: () => void
   }>
 } {
