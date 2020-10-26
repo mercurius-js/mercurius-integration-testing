@@ -1,7 +1,7 @@
 import Fastify, { FastifyReply, FastifyRequest } from 'fastify'
 import FastifyCookie from 'fastify-cookie'
 import gql from 'graphql-tag'
-import Mercurius from 'mercurius'
+import Mercurius, { IResolvers } from 'mercurius'
 import tap from 'tap'
 
 import { createMercuriusTestClient } from '../src'
@@ -21,8 +21,6 @@ const schema = `
   }
 `
 
-type IContext = { req: FastifyRequest; reply: FastifyReply }
-
 type AddQuery = { add: number }
 type AddQueryVariables = { x: number; y: number }
 
@@ -35,15 +33,15 @@ type HeaderQueryVariables = { name: string }
 type CookieQuery = { cookie?: string | null }
 type CookieQueryVariables = { name: string }
 
-const resolvers = {
+const resolvers: IResolvers = {
   Query: {
-    add: (_: {}, { x, y }: AddQueryVariables) => {
+    add: (_, { x, y }: AddQueryVariables) => {
       return x + y
     },
-    header: (_: {}, { name }: HeaderQueryVariables, { req }: IContext) => {
+    header: (_, { name }: HeaderQueryVariables, { req }) => {
       return req.headers[name]
     },
-    cookie: (_: {}, { name }: CookieQueryVariables, { req }: IContext) => {
+    cookie: (_, { name }: CookieQueryVariables, { req }) => {
       return req.cookies[name]
     },
   },
@@ -54,16 +52,23 @@ const resolvers = {
   },
 }
 
+const context = (req: FastifyRequest, reply: FastifyReply) => {
+  return {
+    req,
+    reply,
+  }
+}
+
+type PromiseType<T> = T extends PromiseLike<infer U> ? U : T
+declare module 'mercurius' {
+  interface MercuriusContext extends PromiseType<ReturnType<typeof context>> {}
+}
+
 app.register(Mercurius, {
   schema,
   resolvers,
   allowBatchedQueries: true,
-  context: async (req, reply): Promise<IContext> => {
-    return {
-      req,
-      reply,
-    }
-  },
+  context,
 })
 
 const client = createMercuriusTestClient(app)

@@ -162,7 +162,7 @@ export function createMercuriusTestClient(
     try {
       await app.ready()
 
-      if (app.graphql) {
+      if (typeof app.graphql === 'function') {
         resolve()
       } else {
         reject(Error('Mercurius is not registered in Fastify Instance!'))

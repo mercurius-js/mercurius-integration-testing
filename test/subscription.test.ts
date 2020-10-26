@@ -1,12 +1,9 @@
-import Fastify, { FastifyInstance } from 'fastify'
+import Fastify from 'fastify'
 import gql from 'graphql-tag'
-import mercurius from 'mercurius'
+import mercurius, { IResolvers } from 'mercurius'
 import tap from 'tap'
 
 import { createMercuriusTestClient } from '../src'
-
-import type { MQEmitter } from 'mqemitter'
-import type { Readable } from 'readable-stream'
 
 const app = Fastify({
   logger: {
@@ -15,26 +12,6 @@ const app = Fastify({
 })
 
 // Types based on https://github.com/mercurius-js/mercurius/blob/master/lib/subscriber.js
-declare class PubSub {
-  constructor(emitter: MQEmitter)
-
-  emitter: MQEmitter
-  subscribe(topic: string, queue: Readable): Promise<void>
-  publish(event: { topic: string; payload: any }, callback?: () => void): void
-}
-
-declare class PubSubContext {
-  constructor(opts: { pubsub: PubSub; fastify: FastifyInstance })
-
-  fastify: FastifyInstance
-  queue: Readable
-
-  subscribe(topics: string | string[]): Promise<Readable>
-  publish(event: { topic: string; payload: any }, callback?: () => void): void
-  close(): void
-}
-
-type Context = { pubsub: PubSubContext }
 
 const schema = `
   type Notification {
@@ -64,7 +41,7 @@ const notifications = [
   },
 ]
 
-const resolvers = {
+const resolvers: IResolvers = {
   Query: {
     notifications: () => notifications,
   },
@@ -72,7 +49,7 @@ const resolvers = {
     addNotification: async (
       _root: {},
       { message }: { message: string },
-      { pubsub }: Context
+      { pubsub }
     ) => {
       const id = idCount++
       const notification = {
@@ -89,7 +66,7 @@ const resolvers = {
 
       return notification
     },
-    badNotification: async (_root: {}, _args: {}, { pubsub }: Context) => {
+    badNotification: async (_root: {}, _args: {}, { pubsub }) => {
       pubsub.publish({
         topic: 'NOTIFICATION_ADDED',
         payload: {},
@@ -99,9 +76,7 @@ const resolvers = {
   },
   Subscription: {
     notificationAdded: {
-      // You can also subscribe to multiple topics at once using an array like this:
-      //  pubsub.subscribe(['TOPIC1', 'TOPIC2'])
-      subscribe: (_root: {}, _args: {}, { pubsub }: Context) => {
+      subscribe: (_root: {}, _args: {}, { pubsub }) => {
         return pubsub.subscribe('NOTIFICATION_ADDED')
       },
     },

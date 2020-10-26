@@ -38,19 +38,19 @@
   },
   "devDependencies": {
     "@types/cookie": "^0.4.0",
-    "@types/node": "^14.11.8",
+    "@types/node": "^14.14.3",
     "@types/readable-stream": "^2.3.9",
     "@types/tap": "^14.10.1",
     "@types/ws": "^7.2.7",
     "codecov": "^3.8.0",
     "cross-env": "^7.0.2",
     "dotenv-cli": "^4.0.0",
-    "fastify": "^3.6.0",
+    "fastify": "^3.7.0",
     "fastify-cookie": "^4.1.0",
     "graphql": "^15.3.0",
     "graphql-tag": "^2.11.0",
     "husky": "^4.3.0",
-    "mercurius": "^6.2.0",
+    "mercurius": "^6.4.0",
     "mqemitter": "^4.4.0",
     "prettier": "^2.1.2",
     "pretty-quick": "^3.1.0",
@@ -58,8 +58,8 @@
     "typescript": "^4.0.3"
   },
   "peerDependencies": {
-    "fastify": "^3.6.0",
+    "fastify": "^3.7.0",
     "graphql": "^15.3.0",
-    "mercurius": "^6.1.1"
+    "mercurius": "^6.4.0"
   }
 }

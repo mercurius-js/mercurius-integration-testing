@@ -5,25 +5,25 @@ dependencies:
   ws: 7.3.1
 devDependencies:
   '@types/cookie': 0.4.0
-  '@types/node': 14.11.8
+  '@types/node': 14.14.3
   '@types/readable-stream': 2.3.9
   '@types/tap': 14.10.1
   '@types/ws': 7.2.7
   codecov: 3.8.0
   cross-env: 7.0.2
   dotenv-cli: 4.0.0
-  fastify: 3.6.0
+  fastify: 3.7.0
   fastify-cookie: 4.1.0
   graphql: 15.3.0
   graphql-tag: 2.11.0_graphql@15.3.0
   husky: 4.3.0
-  mercurius: 6.2.0
+  mercurius: 6.4.0
   mqemitter: 4.4.0
   prettier: 2.1.2
   pretty-quick: 3.1.0_prettier@2.1.2
   tap: 14.10.8
   typescript: 4.0.3
-lockfileVersion: 5.1
+lockfileVersion: 5.2
 packages:
   /@babel/code-frame/7.10.4:
     dependencies:
@@ -302,6 +302,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-KPcKqKm5UKDkaYPTuXSx8wEP7vE9GnuaXIZKijwRYcePpZFDVuy2a57LarFKiORbHOuTOOwYzxVxcUzsh2P2Pw==
+  /@types/node/14.14.3:
+    dev: true
+    resolution:
+      integrity: sha512-33/L34xS7HVUx23e0wOT2V1qPF1IrHgQccdJVm9uXGTB9vFBrrzBtkQymT8VskeKOxjz55MSqMv0xuLq+u98WQ==
   /@types/parse-json/4.0.0:
     dev: true
     resolution:
@@ -1175,7 +1179,7 @@ packages:
     dev: true
     resolution:
       integrity: sha512-cESoKnOsq8DIeYOcnGQbRnNUqegXFUAkrEsVIu0vSyiVL2d1bJnsZo6LwA1W8P77fi2cYVodFBAm13gIY0k5Kg==
-  /fastify/3.6.0:
+  /fastify/3.7.0:
     dependencies:
       abstract-logging: 2.0.0
       ajv: 6.12.6
@@ -1185,7 +1189,7 @@ packages:
       fastify-warning: 0.2.0
       find-my-way: 3.0.4
       flatstr: 1.0.12
-      light-my-request: 4.1.1
+      light-my-request: 4.2.1
       pino: 6.7.0
       proxy-addr: 2.0.6
       readable-stream: 3.6.0
@@ -1197,7 +1201,7 @@ packages:
     engines:
       node: '>=10.16.0'
     resolution:
-      integrity: sha512-nz35mhJpJNjSPZzw05x+ITXokeIMmG3MFPzzS/yNzDfw24sGol7Gr3cN3+X3t3PZV1kQG9vJbKDUzgDA+YbbCA==
+      integrity: sha512-xmiR1TOSNXXNHfEvBwhWlyj158q59vZkPLIKQ71f7qJG5QMPqCbeYUUFRaDKTaLFhRqmLLFprBpJsO5nbSMiPQ==
   /fastparallel/2.4.0:
     dependencies:
       reusify: 1.0.4
@@ -1933,7 +1937,7 @@ packages:
     hasBin: true
     resolution:
       integrity: sha1-6w1GtUER68VhrLTECO+TY73I9+A=
-  /light-my-request/4.1.1:
+  /light-my-request/4.2.1:
     dependencies:
       ajv: 6.12.6
       cookie: 0.4.1
@@ -1942,7 +1946,7 @@ packages:
       set-cookie-parser: 2.4.6
     dev: true
     resolution:
-      integrity: sha512-4H0T0PQcFB/fGTIkNV5ShuftWnuUKdtLWq5t2zt+lwMWRZkVviTfmJqGOXeAAqkdREnGJQXa8zJ4wXJ0LrzrTA==
+      integrity: sha512-33FZvX/418IEy0sXldsLiJifbS/ruttcVveTbbZ8sQVR2VSFPA39hBu/iF/hVkt/1V0N7CdTQg4jiiVPdGgW8A==
   /lines-and-columns/1.1.6:
     dev: true
     resolution:
@@ -2028,7 +2032,7 @@ packages:
     dev: true
     resolution:
       integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==
-  /mercurius/6.2.0:
+  /mercurius/6.4.0:
     dependencies:
       end-of-stream: 1.4.4
       events.on: 1.0.1
@@ -2047,7 +2051,7 @@ packages:
       ws: 7.3.1
     dev: true
     resolution:
-      integrity: sha512-OU8jto50dKOr5xkFVrFKfetW3GPe5cVMv4OVw8ZtqB7wmus0NWtrXcOaNO35i2aCsloNENByp6JqR/FWh6Il0Q==
+      integrity: sha512-zvuuLij+F+OQCkZzQEC5LRdMmLKXaqPzol62AW5m66xhJxgqBEY1F/PM4T/Ejkh/L2bCcwRt2jruYw4l9OmocQ==
   /merge-source-map/1.1.0:
     dependencies:
       source-map: 0.6.1
@@ -3481,7 +3485,7 @@ packages:
 specifiers:
   '@graphql-typed-document-node/core': ^3.1.0
   '@types/cookie': ^0.4.0
-  '@types/node': ^14.11.8
+  '@types/node': ^14.14.3
   '@types/readable-stream': ^2.3.9
   '@types/tap': ^14.10.1
   '@types/ws': ^7.2.7
@@ -3489,13 +3493,13 @@ specifiers:
   cookie: ^0.4.1
   cross-env: ^7.0.2
   dotenv-cli: ^4.0.0
-  fastify: ^3.6.0
+  fastify: ^3.7.0
   fastify-cookie: ^4.1.0
   get-port: ^5.1.1
   graphql: ^15.3.0
   graphql-tag: ^2.11.0
   husky: ^4.3.0
-  mercurius: ^6.2.0
+  mercurius: ^6.4.0
   mqemitter: ^4.4.0
   prettier: ^2.1.2
   pretty-quick: ^3.1.0
