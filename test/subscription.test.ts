@@ -117,7 +117,7 @@ tap
         `,
         operationName: 'firstNotification',
         onData: (response) => {
-          t.equivalent(response, {
+          t.same(response, {
             data: {
               notificationAdded: {
                 id: 1,
@@ -176,7 +176,7 @@ tap
               }
             `,
             onData: (data) => {
-              t.equivalent(data, {
+              t.same(data, {
                 data: {
                   notificationAdded: {
                     id: 2,
@@ -241,7 +241,7 @@ tap
               }
               `,
                 onData(response) {
-                  t.equivalent(response, {
+                  t.same(response, {
                     data: null,
                     errors: [
                       {
@@ -271,7 +271,7 @@ tap
               `
                   )
                   .then((resp) => {
-                    t.equivalent(resp, {
+                    t.same(resp, {
                       data: {
                         badNotification: true,
                       },

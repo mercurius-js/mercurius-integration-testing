@@ -76,7 +76,7 @@ const client = createMercuriusTestClient(app)
 tap.test('query', async (t) => {
   t.plan(3)
 
-  t.equivalent(
+  t.same(
     await client.query<AddQuery>(
       `
         query {
@@ -92,7 +92,7 @@ tap.test('query', async (t) => {
     }
   )
 
-  t.equivalent(
+  t.same(
     await client.query<AddQuery>(gql`
       query {
         add(x: 1, y: 2)
@@ -105,7 +105,7 @@ tap.test('query', async (t) => {
     }
   )
 
-  t.equivalent(
+  t.same(
     await client.query<AddQuery>(
       gql`
         query AddQuery {
@@ -142,7 +142,7 @@ tap.test('mutation', async (t) => {
 tap.test('batched queries', async (t) => {
   t.plan(1)
 
-  t.equivalent(
+  t.same(
     await client.batchQueries([
       {
         query: `
