@@ -168,7 +168,10 @@ export function createMercuriusTestClient(
         reject(Error('Mercurius is not registered in Fastify Instance!'))
       }
     } catch (err) {
-      if (err.message === 'app.ready is not a function') {
+      if (
+        err instanceof Error &&
+        err.message === 'app.ready is not a function'
+      ) {
         return reject(Error('Invalid Fastify Instance'))
       }
       reject(err)
