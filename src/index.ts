@@ -3,7 +3,6 @@ import type { FastifyInstance } from 'fastify'
 import type { IncomingHttpHeaders } from 'http'
 
 import { serialize as serializeCookie } from 'cookie'
-import getPort from 'get-port'
 import { DocumentNode, GraphQLError, print } from 'graphql'
 
 import { SubscriptionClient } from './subscription/client'
@@ -301,7 +300,18 @@ export function createMercuriusTestClient(
         } else {
           app.log.warn('Remember to close the app instance manually')
 
-          await app.listen((port = await getPort()))
+          await app.listen(0)
+
+          const address = app.server.address()
+
+          /* istanbul ignore else */
+          if (typeof address === 'object' && address) {
+            port = address.port
+          } else {
+            throw Error(
+              'Error while trying to automatically start the test server'
+            )
+          }
         }
 
         const combinedCookies = Object.entries({ ...cookies, ...newCookies })
