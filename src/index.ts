@@ -401,26 +401,24 @@ export function createMercuriusTestClient(
     keys: Record<string, string | number>
     typeQuery: string
   }) => {
-    let stringifiedKeys: string[] = []
-
-    for (const key in keys) {
-      const value = typeof keys[key] === 'number' ? keys[key] : `"${keys[key]}"`
-      stringifiedKeys.push(`${key}: ${value}`)
-    }
-
     try {
-      const result = await query(`
-      query {
-          _entities(representations: [{ __typename: "${typename}", ${stringifiedKeys.join(
-        ', '
-      )} }]) {
+      const result = await query(
+        `
+      query Entities($representations: [_Any!]!) {
+          _entities(representations: $representations) {
             __typename
             ... on ${typename} {
               ${typeQuery}
             }
           }
         }
-    `)
+    `,
+        {
+          variables: {
+            representations: [{ __typename: typename, ...keys }],
+          },
+        }
+      )
 
       return result.data._entities[0]
     } catch (err) {
