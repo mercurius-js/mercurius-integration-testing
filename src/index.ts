@@ -81,6 +81,20 @@ export function createMercuriusTestClient(
     mutation: TypedDocumentNode<TData, TVariables> | DocumentNode | string,
     mutationOptions?: QueryOptions<TVariables>
   ) => Promise<GQLResponse<TData>>
+
+  /**
+   * Returns federated entity by provided typename and keys
+   * @param options
+   * @returns Promise with requested _Entity
+   */
+  getFederatedEntity: <
+    TData extends Record<string, unknown> = Record<string, any>
+  >(options: {
+    typename: string
+    keys: Record<string, string | number>
+    typeQuery: string
+  }) => Promise<TData>
+
   /**
    * Set new global headers to this test client instance.
    * @param newHeaders new Global headers to be set for the test client.
@@ -378,6 +392,49 @@ export function createMercuriusTestClient(
     })
   }
 
+  const getFederatedEntity = async ({
+    typename,
+    keys,
+    typeQuery,
+  }: {
+    typename: string
+    keys: Record<string, string | number>
+    typeQuery: string
+  }) => {
+    let stringifiedKeys: string[] = []
+
+    for (const key in keys) {
+      const value = typeof keys[key] === 'number' ? keys[key] : `"${keys[key]}"`
+      stringifiedKeys.push(`${key}: ${value}`)
+    }
+
+    try {
+      const result = await query(`
+      query {
+          _entities(representations: [{ __typename: "${typename}", ${stringifiedKeys.join(
+        ', '
+      )} }]) {
+            __typename
+            ... on ${typename} {
+              ${typeQuery}
+            }
+          }
+        }
+    `)
+
+      return result.data._entities[0]
+    } catch (err) {
+      if (
+        err instanceof Error &&
+        err.message.includes('Unknown directive "@key"')
+      ) {
+        throw new Error('Service is not federated')
+      }
+
+      throw err
+    }
+  }
+
   return {
     query,
     mutate: query,
@@ -387,5 +444,6 @@ export function createMercuriusTestClient(
     setCookies,
     batchQueries,
     subscribe,
+    getFederatedEntity,
   }
 }
