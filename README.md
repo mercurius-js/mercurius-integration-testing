@@ -36,6 +36,7 @@ npm install mercurius-integration-testing
       - [setCookies](#setcookies)
       - [batchQueries](#batchqueries)
       - [subscribe](#subscribe)
+      - [getFederatedEntity](#getfederatedentity)
       - [TypeScript](#typescript)
   - [License](#license)
 
@@ -301,6 +302,117 @@ subscription.unsubscribe()
 // You will need to manually close the fastify instance somewhere
 
 app.close()
+```
+
+#### getFederatedEntity
+
+In a federated service it's useful to test if a service is extending the entity correctly.
+
+> This function is a wrapper around [`_entities` query](https://www.apollographql.com/docs/federation/federation-spec/#resolve-requests-for-entities).
+
+An entity can be federated on a single field:
+
+```ts
+const schema = `
+    type Post @key(fields: "id") {
+      id: ID! @external
+      description: String!
+    }
+  
+    extend type User @key(fields: "id") {
+      id: ID! @external
+      posts: [Post!]!
+    }
+  `
+
+const app = fastify()
+app.register(mercurius, {
+  schema,
+  resolvers: {
+    User: {
+      posts: () => [{ id: 'post-id', description: 'Post description' }],
+    },
+  },
+  federationMetadata: true,
+})
+
+const client = createMercuriusTestClient(app)
+
+const entity = await client.getFederatedEntity({
+  typename: 'User',
+  keys: { id: 'user1' },
+  typeQuery: `
+        id
+        posts {
+          id
+          description
+        }`,
+})
+
+entity ===
+  {
+    __typename: 'User',
+    id: 'user1',
+    posts: [
+      {
+        id: 'post-id',
+        description: 'Post description',
+      },
+    ],
+  }
+```
+
+or on multiple fields:
+
+```ts
+const schema = `
+      type ProductCategory {
+        id: ID!
+        name: String!
+      }
+    
+      extend type Product @key(fields: "sku") @key(fields: "upc") {
+        upc: String! @external
+        sku: Int! @external
+        category: ProductCategory
+      }
+    `
+
+const app = fastify()
+app.register(mercurius, {
+  schema,
+  resolvers: {
+    Product: {
+      category: () => ({ id: 'product-category', name: 'Stub category' }),
+    },
+  },
+  federationMetadata: true,
+})
+
+const client = createMercuriusTestClient(app)
+
+const entity = await client.getFederatedEntity({
+  typename: 'Product',
+  keys: { sku: 1, upc: 'upc' },
+  typeQuery: `
+          upc
+          sku
+          category {
+            id
+            name
+          }`,
+})
+
+entity ===
+  {
+    __typename: 'Product',
+    upc: 'upc',
+    sku: 1,
+    category: {
+      id: 'product-category',
+      name: 'Stub category',
+    },
+  }
 ```
 
 #### TypeScript

@@ -282,7 +282,7 @@ tap.test('cookies', async (t) => {
       },
     }
   )
-  t.deepEqual(resp6, [{ data: { cookie: 'y' } }, { data: { cookie: 'y' } }])
+  t.same(resp6, [{ data: { cookie: 'y' } }, { data: { cookie: 'y' } }])
 })
 
 tap.test('headers', async (t) => {
@@ -381,7 +381,7 @@ tap.test('headers', async (t) => {
       },
     }
   )
-  t.deepEqual(resp6, [{ data: { header: 'y' } }, { data: { header: 'y' } }])
+  t.same(resp6, [{ data: { header: 'y' } }, { data: { header: 'y' } }])
 })
 
 tap.test('detects mercurius is not registered', (t) => {
