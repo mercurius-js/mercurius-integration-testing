@@ -1,5 +1,5 @@
 import Fastify, { FastifyReply, FastifyRequest } from 'fastify'
-import FastifyCookie from 'fastify-cookie'
+import FastifyCookie from '@fastify/cookie'
 import gql from 'graphql-tag'
 import Mercurius, { IResolvers } from 'mercurius'
 import tap from 'tap'
