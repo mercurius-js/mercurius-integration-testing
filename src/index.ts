@@ -314,7 +314,9 @@ export function createMercuriusTestClient(
         } else {
           app.log.warn('Remember to close the app instance manually')
 
-          await app.listen(0)
+          await app.listen({
+            port: 0,
+          })
 
           const address = app.server.address()
 
