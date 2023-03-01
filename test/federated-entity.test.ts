@@ -1,5 +1,5 @@
-import { fastify } from 'fastify'
 import {mercuriusFederationPlugin} from "@mercuriusjs/federation";
+import { fastify } from 'fastify'
 import mercurius from 'mercurius'
 import tap from 'tap'
 
