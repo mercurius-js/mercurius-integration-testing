@@ -1,10 +1,9 @@
-import {mercuriusFederationPlugin} from "@mercuriusjs/federation";
+import { mercuriusFederationPlugin } from '@mercuriusjs/federation'
 import { fastify } from 'fastify'
 import mercurius from 'mercurius'
 import tap from 'tap'
 
 import { createMercuriusTestClient } from '../src'
-
 
 tap.test('returns single-key federated entity', async (t) => {
   const schema = `
