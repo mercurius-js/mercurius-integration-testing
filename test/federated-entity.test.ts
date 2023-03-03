@@ -1,3 +1,4 @@
+import { mercuriusFederationPlugin } from '@mercuriusjs/federation'
 import { fastify } from 'fastify'
 import mercurius from 'mercurius'
 import tap from 'tap'
@@ -18,14 +19,13 @@ tap.test('returns single-key federated entity', async (t) => {
   `
 
   const app = fastify()
-  app.register(mercurius, {
+  app.register(mercuriusFederationPlugin, {
     schema,
     resolvers: {
       User: {
         posts: () => [{ id: 'post-id', description: 'Post description' }],
       },
     },
-    federationMetadata: true,
   })
 
   const client = createMercuriusTestClient(app)
@@ -71,14 +71,13 @@ tap.test('returns multi-key federated entity', async (t) => {
     `
 
   const app = fastify()
-  app.register(mercurius, {
+  app.register(mercuriusFederationPlugin, {
     schema,
     resolvers: {
       Product: {
         category: () => ({ id: 'product-category', name: 'Stub category' }),
       },
     },
-    federationMetadata: true,
   })
 
   const client = createMercuriusTestClient(app)
@@ -130,7 +129,6 @@ tap.test('throws if service is not federated', async (t) => {
         posts: () => [{ id: 'post-id', description: 'Post description' }],
       },
     },
-    federationMetadata: false,
   })
 
   const client = createMercuriusTestClient(app)
@@ -166,14 +164,13 @@ tap.test('throws if entity is not federated', async (t) => {
     `
 
   const app = fastify()
-  app.register(mercurius, {
+  app.register(mercuriusFederationPlugin, {
     schema,
     resolvers: {
       User: {
         posts: () => [{ id: 'post-id', description: 'Post description' }],
       },
     },
-    federationMetadata: true,
   })
 
   const client = createMercuriusTestClient(app)

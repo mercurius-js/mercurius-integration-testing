@@ -3,6 +3,8 @@ lockfileVersion: 5.4
 specifiers:
   '@fastify/cookie': ^8.3.0
   '@graphql-typed-document-node/core': ^3.1.1
+  '@mercuriusjs/federation': ^1.0.1
+  '@mercuriusjs/gateway': ^1.2.0
   '@types/cookie': ^0.5.1
   '@types/node': ^14.18.32
   '@types/readable-stream': ^2.3.14
@@ -15,7 +17,7 @@ specifiers:
   graphql: ^16.6.0
   graphql-tag: ^2.12.6
   husky: ^8.0.1
-  mercurius: ^11.0.1
+  mercurius: ^12.0.0
   mqemitter: ^5.0.0
   prettier: ^2.7.1
   pretty-quick: ^3.1.3
@@ -31,6 +33,8 @@ dependencies:
 
 devDependencies:
   '@fastify/cookie': 8.3.0
+  '@mercuriusjs/federation': 1.0.1
+  '@mercuriusjs/gateway': 1.2.0
   '@types/cookie': 0.5.1
   '@types/node': 14.18.32
   '@types/readable-stream': 2.3.14
@@ -42,7 +46,7 @@ devDependencies:
   graphql: 16.6.0
   graphql-tag: 2.12.6_graphql@16.6.0
   husky: 8.0.1
-  mercurius: 11.0.1_graphql@16.6.0
+  mercurius: 12.1.0_graphql@16.6.0
   mqemitter: 5.0.0
   prettier: 2.7.1
   pretty-quick: 3.1.3_prettier@2.7.1
@@ -312,7 +316,7 @@ packages:
     resolution: {integrity: sha512-aEHlymGnMOCY5pTSI6gOlLBX/5pIhQ485zyEx/m2+kITSa9vWtL08jbtAzbsaQBcqOz+bbVvxzerbHZdqQp2qQ==}
     dependencies:
       fastify-plugin: 4.3.0
-      ws: 8.9.0
+      ws: 8.12.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -384,6 +388,53 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
+    dev: true
+
+  /@mercuriusjs/federation/1.0.1:
+    resolution: {integrity: sha512-aski6H8SRfjK73Bruzh5kQ20OS0s0pkbFvcOex46Qm17bYWoJ3daMrbTw4caOSkru7R8pIA/bvAjSq97xkDJkQ==}
+    dependencies:
+      '@fastify/error': 3.0.0
+      graphql: 16.6.0
+      mercurius: 12.1.0_graphql@16.6.0
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+    dev: true
+
+  /@mercuriusjs/gateway/1.2.0:
+    resolution: {integrity: sha512-kwSTeY53NpO2VUaDKKl3PBUwcqQBLHzHAq2FDxCr4N2u2ELu9/yJVAcv7okkmwg7ImjsTOdgbvU2+VrG2foLHQ==}
+    dependencies:
+      '@mercuriusjs/federation': 1.0.1
+      '@mercuriusjs/subscription-client': 1.0.0_graphql@16.6.0
+      fastify-plugin: 4.3.0
+      graphql: 16.6.0
+      graphql-ws: 5.11.3_graphql@16.6.0
+      mercurius: 12.1.0_graphql@16.6.0
+      p-map: 4.0.0
+      single-user-cache: 0.6.0
+      tiny-lru: 10.0.1
+      use-strict: 1.0.1
+      ws: 8.12.1
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+    dev: true
+
+  /@mercuriusjs/subscription-client/1.0.0_graphql@16.6.0:
+    resolution: {integrity: sha512-hIGqNp6FBdcy7ZkrWNk4mHl/Qodtwvbu9/iRl3zQdNRl4UtlVI7xW/FPU+2AJy0qTB567yrpvtQPwtmQLuYHYg==}
+    engines: {node: '>=14.19.3'}
+    peerDependencies:
+      graphql: ^16.0.0
+    dependencies:
+      '@fastify/error': 3.0.0
+      graphql: 16.6.0
+      secure-json-parse: 2.7.0
+      ws: 8.12.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
     dev: true
 
   /@tsconfig/node10/1.0.9:
@@ -858,7 +909,7 @@ packages:
     dev: true
 
   /ee-first/1.1.1:
-    resolution: {integrity: sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=}
+    resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: true
 
   /electron-to-chromium/1.4.282:
@@ -921,10 +972,6 @@ packages:
 
   /events-to-array/1.1.2:
     resolution: {integrity: sha512-inRWzRY7nG+aXZxBzEqYKB3HPgwflZRopAjDCHv0whhRx+MTUr1ei0ICZUypdyE0HRm4L2d5VEcIqLD6yl+BFA==}
-    dev: true
-
-  /events.on/1.0.1:
-    resolution: {integrity: sha512-yT4htzImIQAf7mFV3heqTRNVwysZIgQjrribiCYQk152gcG6shz/WU/6xVGr0oDzkzcDPhMcCYy4lEKBiadSRA==}
     dev: true
 
   /events/3.3.0:
@@ -1176,8 +1223,8 @@ packages:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
     dev: true
 
-  /graphql-jit/0.7.4_graphql@16.6.0:
-    resolution: {integrity: sha512-kWyHmsQtKMD6xcKDgf4dgPLyIZhviqA6IWGdnA0ElL9wgrIOTxf3eI4c0/U3tnoAU3t09zliVCfDkfIptzYjIA==}
+  /graphql-jit/0.8.0_graphql@16.6.0:
+    resolution: {integrity: sha512-mxdV9ohO6jKt1o9erb+7RpmnDKQFQCcJlYVfGa3j4+ieP0ITDsAlm194+pfvdv5F4zgrgZfSe5xx5Rf98epJmg==}
     peerDependencies:
       graphql: '>=15'
     dependencies:
@@ -1199,6 +1246,15 @@ packages:
     dependencies:
       graphql: 16.6.0
       tslib: 2.4.0
+    dev: true
+
+  /graphql-ws/5.11.3_graphql@16.6.0:
+    resolution: {integrity: sha512-fU8zwSgAX2noXAsuFiCZ8BtXeXZOzXyK5u1LloCdacsVth4skdBMPO74EG51lBoWSIZ8beUocdpV8+cQHBODnQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      graphql: '>=0.11 <=16'
+    dependencies:
+      graphql: 16.6.0
     dev: true
 
   /graphql/16.6.0:
@@ -1510,8 +1566,8 @@ packages:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
     dev: true
 
-  /mercurius/11.0.1_graphql@16.6.0:
-    resolution: {integrity: sha512-gas4uY4QaUi98icFOYT3oGVYqg0QZNGpaO9Nz/K148vD9/PcYLdVLnuzbjciqO5DpxHK0PpgoQywdNLt+A371A==}
+  /mercurius/12.1.0_graphql@16.6.0:
+    resolution: {integrity: sha512-HA04WMw/HVF2cYiIYK63uD2L6kkByuMPTy+rltyiYIzqmedIL0poS/kemhsJSodK0QL7NOKAcxisFRE481vRhA==}
     engines: {node: '>=14.19.3'}
     peerDependencies:
       graphql: ^16.0.0
@@ -1519,17 +1575,16 @@ packages:
       '@fastify/error': 3.0.0
       '@fastify/static': 6.5.0
       '@fastify/websocket': 7.1.0
-      events.on: 1.0.1
       fastify-plugin: 4.3.0
       graphql: 16.6.0
-      graphql-jit: 0.7.4_graphql@16.6.0
+      graphql-jit: 0.8.0_graphql@16.6.0
       mqemitter: 5.0.0
       p-map: 4.0.0
       readable-stream: 4.2.0
       safe-stable-stringify: 2.4.0
-      secure-json-parse: 2.5.0
+      secure-json-parse: 2.7.0
       single-user-cache: 0.6.0
-      tiny-lru: 8.0.2
+      tiny-lru: 10.0.1
       undici: 5.11.0
       ws: 8.9.0
     transitivePeerDependencies:
@@ -1986,6 +2041,10 @@ packages:
     resolution: {integrity: sha512-ZQruFgZnIWH+WyO9t5rWt4ZEGqCKPwhiw+YbzTwpmT9elgLrLcfuyUiSnwwjUiVy9r4VM3urtbNF1xmEh9IL2w==}
     dev: true
 
+  /secure-json-parse/2.7.0:
+    resolution: {integrity: sha512-6aU+Rwsezw7VR8/nyvKTx8QpWH9FrcYiXXlqC4z5d5XQBDRqtbfsRjnwGyqbi3gddNtWHuEk9OANUotL26qKUw==}
+    dev: true
+
   /semver/6.3.0:
     resolution: {integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==}
     hasBin: true
@@ -2261,8 +2320,8 @@ packages:
       real-require: 0.2.0
     dev: true
 
-  /tiny-lru/8.0.2:
-    resolution: {integrity: sha512-ApGvZ6vVvTNdsmt676grvCkUCGwzG9IqXma5Z07xJgiC5L7akUMof5U8G2JTI9Rz/ovtVhJBlY6mNhEvtjzOIg==}
+  /tiny-lru/10.0.1:
+    resolution: {integrity: sha512-Vst+6kEsWvb17Zpz14sRJV/f8bUWKhqm6Dc+v08iShmIJ/WxqWytHzCTd6m88pS33rE2zpX34TRmOpAJPloNCA==}
     engines: {node: '>=6'}
     dev: true
 
@@ -2374,6 +2433,10 @@ packages:
       punycode: 2.1.1
     dev: true
 
+  /use-strict/1.0.1:
+    resolution: {integrity: sha512-IeiWvvEXfW5ltKVMkxq6FvNf2LojMKvB2OCeja6+ct24S1XOmQw2dGr2JyndwACWAGJva9B7yPHwAmeA9QCqAQ==}
+    dev: true
+
   /uuid/8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
@@ -2424,6 +2487,19 @@ packages:
       is-typedarray: 1.0.0
       signal-exit: 3.0.7
       typedarray-to-buffer: 3.1.5
+    dev: true
+
+  /ws/8.12.1:
+    resolution: {integrity: sha512-1qo+M9Ba+xNhPB+YTWUlK6M17brTut5EXbcBaMRN5pH5dFrXz7lzz1ChFSUq3bOUl8yEvSenhHmYUNJxFzdJew==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
     dev: true
 
   /ws/8.9.0:

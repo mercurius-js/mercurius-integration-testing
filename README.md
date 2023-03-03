@@ -313,6 +313,8 @@ In a federated service it's useful to test if a service is extending the entity 
 An entity can be federated on a single field:
 
 ```ts
+import { mercuriusFederationPlugin } from '@mercuriusjs/federation'
+
 const schema = `
     type Post @key(fields: "id") {
       id: ID! @external
@@ -326,14 +328,13 @@ const schema = `
   `
 
 const app = fastify()
-app.register(mercurius, {
+app.register(mercuriusFederationPlugin, {
   schema,
   resolvers: {
     User: {
       posts: () => [{ id: 'post-id', description: 'Post description' }],
     },
   },
-  federationMetadata: true,
 })
 
 const client = createMercuriusTestClient(app)
@@ -379,14 +380,13 @@ const schema = `
     `
 
 const app = fastify()
-app.register(mercurius, {
+app.register(mercuriusFederationPlugin, {
   schema,
   resolvers: {
     Product: {
       category: () => ({ id: 'product-category', name: 'Stub category' }),
     },
   },
-  federationMetadata: true,
 })
 
 const client = createMercuriusTestClient(app)
