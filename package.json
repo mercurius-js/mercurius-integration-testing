@@ -64,6 +64,14 @@
     "graphql": "*",
     "mercurius": "^12.0.0"
   },
+  "peerDependenciesMeta": {
+    "@mercuriusjs/federation": {
+      "optional": true
+    },
+    "@mercuriusjs/gateway": {
+      "optional": true
+    }
+  },
   "packageManager": "pnpm@7.32.2",
   "engines": {
     "node": ">=14"
