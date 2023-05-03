@@ -62,7 +62,7 @@
     "@mercuriusjs/gateway": "^1.2.0",
     "fastify": "^4.0.0",
     "graphql": "*",
-    "mercurius": "^12 | ^13"
+    "mercurius": "^12 || ^13"
   },
   "peerDependenciesMeta": {
     "@mercuriusjs/federation": {
