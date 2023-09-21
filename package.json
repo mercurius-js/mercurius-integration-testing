@@ -46,7 +46,7 @@
     "cross-env": "^7.0.3",
     "dotenv-cli": "^6.0.0",
     "fastify": "^4.16.0",
-    "graphql": "^16.6.0",
+    "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
     "husky": "^8.0.3",
     "mercurius": "^13.0.0",
