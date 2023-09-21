@@ -3,7 +3,7 @@ lockfileVersion: '6.0'
 dependencies:
   '@graphql-typed-document-node/core':
     specifier: ^3.1.2
-    version: 3.1.2(graphql@16.6.0)
+    version: 3.1.2(graphql@16.8.1)
   cookie:
     specifier: ^0.5.0
     version: 0.5.0
@@ -46,17 +46,17 @@ devDependencies:
     specifier: ^4.16.0
     version: 4.17.0
   graphql:
-    specifier: ^16.6.0
-    version: 16.6.0
+    specifier: ^16.8.1
+    version: 16.8.1
   graphql-tag:
     specifier: ^2.12.6
-    version: 2.12.6(graphql@16.6.0)
+    version: 2.12.6(graphql@16.8.1)
   husky:
     specifier: ^8.0.3
     version: 8.0.3
   mercurius:
     specifier: ^13.0.0
-    version: 13.0.0(graphql@16.6.0)
+    version: 13.0.0(graphql@16.8.1)
   mqemitter:
     specifier: ^5.0.0
     version: 5.0.0
@@ -297,7 +297,7 @@ packages:
     resolution: {integrity: sha512-ebbEtlI7dxXF5ziNdr05mOY8NnDiPB1XvAlLHctRt/Rc+C3LCOVW5imUVX+mhvUhnNzmPBHewUkOFgGlCxgdAA==}
     dependencies:
       ajv: 8.12.0
-      ajv-formats: 2.1.1(ajv@8.12.0)
+      ajv-formats: 2.1.1
       fast-uri: 2.2.0
     dev: true
 
@@ -364,12 +364,12 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@graphql-typed-document-node/core@3.1.2(graphql@16.6.0):
+  /@graphql-typed-document-node/core@3.1.2(graphql@16.8.1):
     resolution: {integrity: sha512-9anpBMM9mEgZN4wr2v8wHJI2/u5TnnggewRN6OlvXTTnuVyoY19X6rOv9XTqKRw6dcGKwZsBi8n0kDE2I5i4VA==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
-      graphql: 16.6.0
+      graphql: 16.8.1
 
   /@istanbuljs/load-nyc-config@1.1.0:
     resolution: {integrity: sha512-VjeHSlIzpv/NyD3N0YuHfXOPDIixcA1q2ZV98wsMqcYlPmv2n3Yb2lYP9XMElnaFVXg5A7YLTeLu6V84uQDjmQ==}
@@ -441,8 +441,8 @@ packages:
     resolution: {integrity: sha512-aski6H8SRfjK73Bruzh5kQ20OS0s0pkbFvcOex46Qm17bYWoJ3daMrbTw4caOSkru7R8pIA/bvAjSq97xkDJkQ==}
     dependencies:
       '@fastify/error': 3.2.0
-      graphql: 16.6.0
-      mercurius: 12.2.0(graphql@16.6.0)
+      graphql: 16.8.1
+      mercurius: 12.2.0(graphql@16.8.1)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -452,8 +452,8 @@ packages:
     resolution: {integrity: sha512-hBL2Zhdf0p2Ab2SDPXcVnNsYTf5x50xPAyHm2HpmXreHS7aGt4obX8g8JrqRhIfOApcRg5l9RQ2OZqaUYeR8sQ==}
     dependencies:
       '@fastify/error': 3.2.0
-      graphql: 16.6.0
-      mercurius: 13.0.0(graphql@16.6.0)
+      graphql: 16.8.1
+      mercurius: 13.0.0(graphql@16.8.1)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -463,11 +463,11 @@ packages:
     resolution: {integrity: sha512-kwSTeY53NpO2VUaDKKl3PBUwcqQBLHzHAq2FDxCr4N2u2ELu9/yJVAcv7okkmwg7ImjsTOdgbvU2+VrG2foLHQ==}
     dependencies:
       '@mercuriusjs/federation': 1.0.1
-      '@mercuriusjs/subscription-client': 1.0.0(graphql@16.6.0)
+      '@mercuriusjs/subscription-client': 1.0.0(graphql@16.8.1)
       fastify-plugin: 4.5.0
-      graphql: 16.6.0
-      graphql-ws: 5.12.0(graphql@16.6.0)
-      mercurius: 12.2.0(graphql@16.6.0)
+      graphql: 16.8.1
+      graphql-ws: 5.12.0(graphql@16.8.1)
+      mercurius: 12.2.0(graphql@16.8.1)
       p-map: 4.0.0
       single-user-cache: 0.6.0
       tiny-lru: 10.0.1
@@ -478,14 +478,14 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@mercuriusjs/subscription-client@1.0.0(graphql@16.6.0):
+  /@mercuriusjs/subscription-client@1.0.0(graphql@16.8.1):
     resolution: {integrity: sha512-hIGqNp6FBdcy7ZkrWNk4mHl/Qodtwvbu9/iRl3zQdNRl4UtlVI7xW/FPU+2AJy0qTB567yrpvtQPwtmQLuYHYg==}
     engines: {node: '>=14.19.3'}
     peerDependencies:
       graphql: ^16.0.0
     dependencies:
       '@fastify/error': 3.2.0
-      graphql: 16.6.0
+      graphql: 16.8.1
       secure-json-parse: 2.7.0
       ws: 8.12.1
     transitivePeerDependencies:
@@ -570,10 +570,8 @@ packages:
       indent-string: 4.0.0
     dev: true
 
-  /ajv-formats@2.1.1(ajv@8.12.0):
+  /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependencies:
-      ajv: ^8.0.0
     peerDependenciesMeta:
       ajv:
         optional: true
@@ -1051,7 +1049,7 @@ packages:
     dependencies:
       '@fastify/deepmerge': 1.3.0
       ajv: 8.12.0
-      ajv-formats: 2.1.1(ajv@8.12.0)
+      ajv-formats: 2.1.1
       fast-deep-equal: 3.1.3
       fast-uri: 2.2.0
       rfdc: 1.3.0
@@ -1252,42 +1250,42 @@ packages:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
     dev: true
 
-  /graphql-jit@0.8.0(graphql@16.6.0):
+  /graphql-jit@0.8.0(graphql@16.8.1):
     resolution: {integrity: sha512-mxdV9ohO6jKt1o9erb+7RpmnDKQFQCcJlYVfGa3j4+ieP0ITDsAlm194+pfvdv5F4zgrgZfSe5xx5Rf98epJmg==}
     peerDependencies:
       graphql: '>=15'
     dependencies:
-      '@graphql-typed-document-node/core': 3.1.2(graphql@16.6.0)
+      '@graphql-typed-document-node/core': 3.1.2(graphql@16.8.1)
       fast-json-stringify: 1.21.0
       generate-function: 2.3.1
-      graphql: 16.6.0
+      graphql: 16.8.1
       json-schema: 0.4.0
       lodash.memoize: 4.1.2
       lodash.merge: 4.6.2
       lodash.mergewith: 4.6.2
     dev: true
 
-  /graphql-tag@2.12.6(graphql@16.6.0):
+  /graphql-tag@2.12.6(graphql@16.8.1):
     resolution: {integrity: sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==}
     engines: {node: '>=10'}
     peerDependencies:
       graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
-      graphql: 16.6.0
+      graphql: 16.8.1
       tslib: 2.5.0
     dev: true
 
-  /graphql-ws@5.12.0(graphql@16.6.0):
+  /graphql-ws@5.12.0(graphql@16.8.1):
     resolution: {integrity: sha512-PA3ImUp8utrpEjoxBMhvxsjkStvFEdU0E1gEBREt8HZIWkxOUymwJBhFnBL7t/iHhUq1GVPeZevPinkZFENxTw==}
     engines: {node: '>=10'}
     peerDependencies:
       graphql: '>=0.11 <=16'
     dependencies:
-      graphql: 16.6.0
+      graphql: 16.8.1
     dev: true
 
-  /graphql@16.6.0:
-    resolution: {integrity: sha512-KPIBPDlW7NxrbT/eh4qPXz5FiFdL5UbaA0XUNz2Rp3Z3hqBSkbj0GVjwFDztsWVauZUWsbKHgMg++sk8UX0bkw==}
+  /graphql@16.8.1:
+    resolution: {integrity: sha512-59LZHPdGZVh695Ud9lRzPBVTtlX9ZCV150Er2W43ro37wVof0ctenSaskPPjN7lVTIN8mSZt8PHUNKZuNQUuxw==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
 
   /has-flag@3.0.0:
@@ -1601,7 +1599,7 @@ packages:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
     dev: true
 
-  /mercurius@12.2.0(graphql@16.6.0):
+  /mercurius@12.2.0(graphql@16.8.1):
     resolution: {integrity: sha512-S1/j+MSJA11A0rW/TM+31qq7PTf9EQVDtq+XJQMaebtqEP5JhhUmQnTLzCh9NhHkh7YIFH72gEY03Phr3Cs8xQ==}
     engines: {node: '>=14.19.3'}
     peerDependencies:
@@ -1611,8 +1609,8 @@ packages:
       '@fastify/static': 6.9.0
       '@fastify/websocket': 7.1.2
       fastify-plugin: 4.5.0
-      graphql: 16.6.0
-      graphql-jit: 0.8.0(graphql@16.6.0)
+      graphql: 16.8.1
+      graphql-jit: 0.8.0(graphql@16.8.1)
       mqemitter: 5.0.0
       p-map: 4.0.0
       readable-stream: 4.3.0
@@ -1627,7 +1625,7 @@ packages:
       - utf-8-validate
     dev: true
 
-  /mercurius@13.0.0(graphql@16.6.0):
+  /mercurius@13.0.0(graphql@16.8.1):
     resolution: {integrity: sha512-gPJGw9qymc2JSee5lUgg5OeQLM7EtLzEWMY7dV2sMwUdh3k8iO3Y22iy6B8TnIX2atpVt2xSpWHRvfiUvH6wuQ==}
     engines: {node: '>=14.19.3'}
     peerDependencies:
@@ -1637,8 +1635,8 @@ packages:
       '@fastify/static': 6.9.0
       '@fastify/websocket': 8.0.0
       fastify-plugin: 4.5.0
-      graphql: 16.6.0
-      graphql-jit: 0.8.0(graphql@16.6.0)
+      graphql: 16.8.1
+      graphql-jit: 0.8.0(graphql@16.8.1)
       mqemitter: 5.0.0
       p-map: 4.0.0
       readable-stream: 4.3.0
