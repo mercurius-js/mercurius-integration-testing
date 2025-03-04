@@ -57,7 +57,7 @@
     "typescript": "^5.6.2"
   },
   "peerDependencies": {
-    "@mercuriusjs/federation": "^1 || ^2",
+    "@mercuriusjs/federation": "^1 || ^2 || ^3 || ^4 || ^5",
     "@mercuriusjs/gateway": "^1.2.0",
     "fastify": "^4.0.0 || ^5.0.0",
     "graphql": "*",
