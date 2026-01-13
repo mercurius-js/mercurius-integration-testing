@@ -1,11 +1,11 @@
 import { mercuriusFederationPlugin } from '@mercuriusjs/federation'
 import { fastify } from 'fastify'
 import mercurius from 'mercurius'
-import tap from 'tap'
+import { test } from 'node:test'
 
 import { createMercuriusTestClient } from '../src'
 
-tap.test('returns single-key federated entity', async (t) => {
+test('returns single-key federated entity', async (t) => {
   const schema = `
     type Post @key(fields: "id") {
       id: ID! @external
@@ -30,9 +30,7 @@ tap.test('returns single-key federated entity', async (t) => {
 
   const client = createMercuriusTestClient(app)
 
-  t.plan(1)
-
-  t.same(
+  t.assert.deepStrictEqual(
     await client.getFederatedEntity({
       typename: 'User',
       keys: { id: 'user1' },
@@ -56,7 +54,7 @@ tap.test('returns single-key federated entity', async (t) => {
   )
 })
 
-tap.test('returns multi-key federated entity', async (t) => {
+test('returns multi-key federated entity', async (t) => {
   const schema = `
       type ProductCategory {
         id: ID!
@@ -82,9 +80,7 @@ tap.test('returns multi-key federated entity', async (t) => {
 
   const client = createMercuriusTestClient(app)
 
-  t.plan(1)
-
-  t.same(
+  t.assert.deepStrictEqual(
     await client.getFederatedEntity({
       typename: 'Product',
       keys: { sku: 1, upc: 'upc' },
@@ -108,7 +104,7 @@ tap.test('returns multi-key federated entity', async (t) => {
   )
 })
 
-tap.test('throws if service is not federated', async (t) => {
+test('throws if service is not federated', async (t) => {
   const schema = `
     type Post @key(fields: "id") {
       id: ID! @external
@@ -133,9 +129,7 @@ tap.test('throws if service is not federated', async (t) => {
 
   const client = createMercuriusTestClient(app)
 
-  t.plan(1)
-
-  t.rejects(
+  await t.assert.rejects(
     client.getFederatedEntity({
       typename: 'User',
       keys: { id: 'user1' },
@@ -150,7 +144,7 @@ tap.test('throws if service is not federated', async (t) => {
   )
 })
 
-tap.test('throws if entity is not federated', async (t) => {
+test('throws if entity is not federated', async (t) => {
   const schema = `
       type Post @key(fields: "id") {
         id: ID! @external
@@ -175,9 +169,7 @@ tap.test('throws if entity is not federated', async (t) => {
 
   const client = createMercuriusTestClient(app)
 
-  t.plan(1)
-
-  t.rejects(
+  await t.assert.rejects(
     client.getFederatedEntity({
       typename: 'NotFederated',
       keys: { id: 'not-important' },

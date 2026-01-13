@@ -1,8 +1,8 @@
-import Fastify, { FastifyReply, FastifyRequest } from 'fastify'
 import FastifyCookie from '@fastify/cookie'
+import Fastify, { FastifyReply, FastifyRequest } from 'fastify'
 import gql from 'graphql-tag'
 import Mercurius, { IResolvers } from 'mercurius'
-import tap from 'tap'
+import { test } from 'node:test'
 
 import { createMercuriusTestClient } from '../src'
 
@@ -73,10 +73,8 @@ app.register(Mercurius, {
 
 const client = createMercuriusTestClient(app)
 
-tap.test('query', async (t) => {
-  t.plan(3)
-
-  t.same(
+test('query', async t => {
+  t.assert.deepStrictEqual(
     await client.query<AddQuery>(
       `
         query {
@@ -92,7 +90,7 @@ tap.test('query', async (t) => {
     }
   )
 
-  t.same(
+  t.assert.deepStrictEqual(
     await client.query<AddQuery>(gql`
       query {
         add(x: 1, y: 2)
@@ -105,7 +103,7 @@ tap.test('query', async (t) => {
     }
   )
 
-  t.same(
+  t.assert.deepStrictEqual(
     await client.query<AddQuery>(
       gql`
         query AddQuery {
@@ -124,10 +122,8 @@ tap.test('query', async (t) => {
   )
 })
 
-tap.test('mutation', async (t) => {
-  t.plan(1)
-
-  t.equal(
+test('mutation', async t => {
+  t.assert.strictEqual(
     (
       await client.mutate<SubstractMutation>(`
         mutation {
@@ -139,10 +135,8 @@ tap.test('mutation', async (t) => {
   )
 })
 
-tap.test('batched queries', async (t) => {
-  t.plan(1)
-
-  t.same(
+test('batched queries', async t => {
+  t.assert.deepStrictEqual(
     await client.batchQueries([
       {
         query: `
@@ -186,13 +180,12 @@ tap.test('batched queries', async (t) => {
   )
 })
 
-tap.test('cookies', async (t) => {
+test('cookies', async t => {
   const client = createMercuriusTestClient(app, {
     cookies: {
       foo: 'a',
     },
   })
-  t.plan(6)
 
   const cookieQuery = `
   query($name: String!) {
@@ -208,7 +201,7 @@ tap.test('cookies', async (t) => {
       },
     }
   )
-  t.equal(resp1.data.cookie, 'a')
+  t.assert.strictEqual(resp1.data.cookie, 'a')
 
   const resp2 = await client.query<CookieQuery, CookieQueryVariables>(
     cookieQuery,
@@ -218,7 +211,7 @@ tap.test('cookies', async (t) => {
       },
     }
   )
-  t.equal(resp2.data.cookie, null)
+  t.assert.strictEqual(resp2.data.cookie, null)
 
   client.setCookies({
     foo: 'b',
@@ -232,7 +225,7 @@ tap.test('cookies', async (t) => {
       },
     }
   )
-  t.equal(resp3.data.cookie, 'b')
+  t.assert.strictEqual(resp3.data.cookie, 'b')
 
   const resp4 = await client.query<CookieQuery, CookieQueryVariables>(
     cookieQuery,
@@ -246,7 +239,7 @@ tap.test('cookies', async (t) => {
     }
   )
 
-  t.equal(resp4.data.cookie, 'ipsum')
+  t.assert.strictEqual(resp4.data.cookie, 'ipsum')
 
   const resp5 = await client.query<CookieQuery, CookieQueryVariables>(
     cookieQuery,
@@ -259,7 +252,7 @@ tap.test('cookies', async (t) => {
       },
     }
   )
-  t.equal(resp5.data.cookie, 'z')
+  t.assert.strictEqual(resp5.data.cookie, 'z')
 
   const resp6 = await client.batchQueries(
     [
@@ -282,16 +275,15 @@ tap.test('cookies', async (t) => {
       },
     }
   )
-  t.same(resp6, [{ data: { cookie: 'y' } }, { data: { cookie: 'y' } }])
+  t.assert.deepStrictEqual(resp6, [{ data: { cookie: 'y' } }, { data: { cookie: 'y' } }])
 })
 
-tap.test('headers', async (t) => {
+test('headers', async t => {
   const client = createMercuriusTestClient(app, {
     headers: {
       foo: 'a',
     },
   })
-  t.plan(6)
 
   const headerQuery = `
     query($name: String!) {
@@ -307,7 +299,7 @@ tap.test('headers', async (t) => {
       },
     }
   )
-  t.equal(resp1.data.header, 'a')
+  t.assert.strictEqual(resp1.data.header, 'a')
 
   const resp2 = await client.query<HeaderQuery, HeaderQueryVariables>(
     headerQuery,
@@ -317,7 +309,7 @@ tap.test('headers', async (t) => {
       },
     }
   )
-  t.equal(resp2.data.header, null)
+  t.assert.strictEqual(resp2.data.header, null)
 
   client.setHeaders({
     foo: 'b',
@@ -331,7 +323,7 @@ tap.test('headers', async (t) => {
       },
     }
   )
-  t.equal(resp3.data.header, 'b')
+  t.assert.strictEqual(resp3.data.header, 'b')
 
   const resp4 = await client.query<HeaderQuery, HeaderQueryVariables>(
     headerQuery,
@@ -345,7 +337,7 @@ tap.test('headers', async (t) => {
     }
   )
 
-  t.equal(resp4.data.header, 'ipsum')
+  t.assert.strictEqual(resp4.data.header, 'ipsum')
 
   const resp5 = await client.query<HeaderQuery, HeaderQueryVariables>(
     headerQuery,
@@ -358,7 +350,7 @@ tap.test('headers', async (t) => {
       },
     }
   )
-  t.equal(resp5.data.header, 'z')
+  t.assert.strictEqual(resp5.data.header, 'z')
 
   const resp6 = await client.batchQueries(
     [
@@ -381,30 +373,28 @@ tap.test('headers', async (t) => {
       },
     }
   )
-  t.same(resp6, [{ data: { header: 'y' } }, { data: { header: 'y' } }])
+  t.assert.deepStrictEqual(resp6, [{ data: { header: 'y' } }, { data: { header: 'y' } }])
 })
 
-tap.test('detects mercurius is not registered', (t) => {
-  t.plan(2)
-
+test('detects mercurius is not registered', async t => {
   const app = Fastify()
 
   const client = createMercuriusTestClient(app)
 
-  t.rejects(
+  await t.assert.rejects(
     client.query(''),
     Error('Mercurius is not registered in Fastify Instance!')
   )
 
   const app2 = Fastify()
 
-  app2.register(async () => {
+  app2.register(async t => {
     throw Error('Example register error')
   })
 
   const client2 = createMercuriusTestClient(app2)
 
-  t.rejects(
+  await t.assert.rejects(
     client2.subscribe({
       query: '',
       onData() {},

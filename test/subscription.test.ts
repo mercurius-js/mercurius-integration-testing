@@ -1,7 +1,7 @@
 import Fastify from 'fastify'
 import gql from 'graphql-tag'
 import mercurius, { IResolvers } from 'mercurius'
-import tap from 'tap'
+import { after, test } from 'node:test'
 
 import { createMercuriusTestClient } from '../src'
 
@@ -99,13 +99,15 @@ app.register(mercurius, {
   allowBatchedQueries: true,
 })
 
-tap
-  .test('subscriptions with new listen', (t) => {
-    t.plan(1)
+after(() => app.close())
 
-    const client = createMercuriusTestClient(app)
+test('subscriptions with new listen', async t => {
+  const client = createMercuriusTestClient(app)
 
-    const subscription = client
+  await new Promise<void>((resolve) => {
+    let subscription: Promise<{ unsubscribe: () => void }>
+
+    subscription = client
       .subscribe({
         query: `
         subscription firstNotification {
@@ -117,16 +119,17 @@ tap
         `,
         operationName: 'firstNotification',
         onData: (response) => {
-          t.same(response, {
+          t.assert.deepStrictEqual(response, {
             data: {
               notificationAdded: {
-                id: 1,
+                id: '1',
                 message: 'hello world',
               },
             },
           })
           subscription.then((sub) => {
             sub.unsubscribe()
+            resolve()
           })
         },
         initPayload: {
@@ -158,41 +161,43 @@ tap
         return sub
       })
   })
-  .then(() => {
-    tap
-      .test('subscriptions reusing listen', (t) => {
-        t.plan(1)
+})
 
-        const client = createMercuriusTestClient(app)
+test('subscriptions reusing listen', async t => {
+  const client = createMercuriusTestClient(app)
 
-        const subscription = client
-          .subscribe({
-            query: gql`
-              subscription {
-                notificationAdded {
-                  id
-                  message
-                }
-              }
-            `,
-            onData: (data) => {
-              t.same(data, {
-                data: {
-                  notificationAdded: {
-                    id: 2,
-                    message: 'hello world',
-                  },
-                },
-              })
-              subscription.then((sub) => {
-                sub.unsubscribe()
-              })
+  await new Promise<void>((resolve) => {
+    let subscription: Promise<{ unsubscribe: () => void }>
+
+    subscription = client
+      .subscribe({
+        query: gql`
+          subscription {
+            notificationAdded {
+              id
+              message
+            }
+          }
+        `,
+        onData: (data) => {
+          t.assert.deepStrictEqual(data, {
+            data: {
+              notificationAdded: {
+                id: '2',
+                message: 'hello world',
+              },
             },
           })
-          .then((sub) => {
-            client
-              .mutate(
-                `
+          subscription.then((sub) => {
+            sub.unsubscribe()
+            resolve()
+          })
+        },
+      })
+      .then((sub) => {
+        client
+          .mutate(
+            `
      mutation {
          addNotification(message: "hello world") {
           id
@@ -200,87 +205,84 @@ tap
       }
      }
      `
-              )
+          )
+          .catch(console.error)
 
-              .catch(console.error)
+        return sub
+      })
+  })
+})
 
-            return sub
+test('error handling', async t => {
+  const client = createMercuriusTestClient(app)
+
+  await t.assert.rejects(
+    client.subscribe({
+      query: {} as any,
+      onData() {},
+    }),
+    /Invalid AST Node/
+  )
+
+  const errorClient = createMercuriusTestClient({} as any)
+
+  await t.assert.rejects(
+    errorClient.subscribe({
+      query: 'subscription {}',
+      onData(_data) {},
+    }),
+    Error('Invalid Fastify Instance')
+  )
+
+  await new Promise<void>((resolve) => {
+    client
+      .subscribe({
+        query: `
+        subscription {
+          notificationAdded {
+            id
+            message
+          }
+        }
+        `,
+        onData(response) {
+          t.assert.deepStrictEqual(response, {
+            data: null,
+            errors: [
+              {
+                message:
+                  'Cannot return null for non-nullable field Subscription.notificationAdded.',
+                locations: [
+                  {
+                    line: 3,
+                    column: 11,
+                  },
+                ],
+                path: ['notificationAdded'],
+              },
+            ],
           })
+          resolve()
+        },
       })
       .then(() => {
-        tap
-          .test('error handling', (t) => {
-            t.plan(4)
-            const client = createMercuriusTestClient(app)
-            t.rejects(
-              client.subscribe({
-                query: {} as any,
-                onData() {},
-              }),
-              Error('Invalid AST Node')
-            )
-
-            const errorClient = createMercuriusTestClient({} as any)
-
-            t.rejects(
-              errorClient.subscribe({
-                query: 'subscription {}',
-                onData(_data) {},
-              }),
-              Error('Invalid Fastify Instance')
-            )
-
-            client
-              .subscribe({
-                query: `
-              subscription {
-                notificationAdded {
-                  id
-                  message
-                }
-              }
-              `,
-                onData(response) {
-                  t.same(response, {
-                    data: null,
-                    errors: [
-                      {
-                        message:
-                          'Cannot return null for non-nullable field Subscription.notificationAdded.',
-                        locations: [
-                          {
-                            line: 3,
-                            column: 17,
-                          },
-                        ],
-                        path: ['notificationAdded'],
-                      },
-                    ],
-                  })
-                },
-              })
-              .then(() => {
-                client
-                  .mutate<{
-                    badNotification: boolean
-                  }>(
-                    `
-              mutation {
-                badNotification
-              }
-              `
-                  )
-                  .then((resp) => {
-                    t.same(resp, {
-                      data: {
-                        badNotification: true,
-                      },
-                    })
-                  })
-              })
-          })
-          .then(() => {
-            app.close()
+        client
+          .mutate<{
+            badNotification: boolean
+          }>(
+            `
+        mutation {
+          badNotification
+        }
+        `
+          )
+          .then((resp) => {
+            t.assert.deepStrictEqual(resp, {
+              data: {
+                badNotification: true,
+              },
+            })
           })
       })
   })
+})
